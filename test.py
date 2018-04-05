@@ -45,3 +45,6 @@ child = Genome.crossover(parent1, parent2)
 
 for x in child.getConnectionGenes():
     print(x, child.getConnectionGenes()[x].input_neuron, child.getConnectionGenes()[x].output_neuron)
+
+for x in child.getNodeGenes():
+    print(x, child.getNodeGenes()[x].id, child.getNodeGenes()[x].nodeType)

@@ -73,6 +73,7 @@ class Genome:
         connectionList.append(inToNew)
         connectionList.append(newToOut)
 
+    @staticmethod
     def crossover(parent1, parent2):
         child = Genome()
 
@@ -82,7 +83,7 @@ class Genome:
         for parent1Node in parent1.getConnectionGenes().values():
             if parent1Node.innovation_number in parent2.getConnectionGenes(): 
                 truthValue = bool(random.getrandbits(1))
-                childConGene = parent1Node.copy if truthValue else parent2.getConnectionGenes().index(parent1Node.innovation).copy()
+                childConGene = parent1Node.copy() if truthValue else parent2.getConnectionGenes().index(parent1Node.innovation).copy()
             else:
                 childConGene = parent1Node.copy()
                 child.addConnectionGenes(childConGene)
