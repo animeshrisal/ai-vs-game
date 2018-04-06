@@ -1,7 +1,7 @@
 from connectionGene import ConnectionGene
 from nodeGene import NodeGene
 import numpy as np
-from random import *
+import random
 
 class Genome:
 
@@ -21,13 +21,12 @@ class Genome:
     def addConnectionGenes(self, ConnectionGene):
         self.connectionList.update({ConnectionGene.innovation_number: ConnectionGene.copy()})
 
-    def addConnectionMutation():
-        randomValue = randint(1, len(nodeList))
-        node1 = nodeList[randomValue]
-        node2 = nodeList[ramdomValue]
+    def addConnectionMutation(self, innovation_number):
+        node1 = self.nodeList[random.randint(1, len(self.nodeList))]
+        node2 = self.nodeList[random.randint(1, len(self.nodeList))]
         weight = random.uniform(0, 1)
 
-        reversed = False
+        reverse = False
 
         if(node1.nodeType == 'hidden' and node2.nodeType == 'input'):
             reverse = True 
@@ -38,40 +37,52 @@ class Genome:
         if(node1.nodeType == 'output' and node2.nodeType == 'input'):
             reverse = True
 
+        connectionImpossible = False
+
+        if(node1.nodeType == 'input' and node2.nodeType == 'input'):
+            connectionImpossible = True        
+
+        if(node1.nodeType == 'output' and node2.nodeType == 'output'):
+            connectionImpossible = True 
+
+        if(node1.id == node2.id):
+            connectionImpossible = True
+
         connectionExists = False
 
-        for connection in connectionList:
-            if(connection.input_neuron == node1.id and connection.output_node == node2.id):
+        for connection in self.connectionList.values():
+            if(connection.input_neuron == node1.id and connection.output_neuron == node2.id):
                 connectionExists = True
                 break
             
-            elif(connection.input_neuron == node1.id and connection.output_node == node2.id):
+            elif(connection.input_neuron == node2.id and connection.output_neuron == node1.id):
                 connectionExists = True
                 break
 
-        if connectionExists:
+        if(connectionExists or connectionImpossible):
             return
 
-        newConnection = connectionGene(0, node2.id if reverse else node1.id, node1.id if reverse else node2.id, weight, True)
-        connectionList.append(newConnection)
 
-    def addNodeMutation():
-        randomValue = randint(1, len(connectionList))
-        connection = connectionList.index(randomValue)
+        newConnection = ConnectionGene(innovation_number.getInnovation(), node2.id if reverse else node1.id, node1.id if reverse else node2.id, weight, True)
+        self.connectionList.update({newConnection.innovation_number : newConnection})
 
-        inNode = nodeList.index(randomValue)
-        outNode = nodeList.index(ramdomValue)
+    def addNodeMutation(self, innovation_number):
+        randomValue = random.randint(1, len(self.connectionList) -1)
+        connection = self.connectionList[randomValue]
+
+        inNode = self.nodeList[connection.input_neuron]
+        outNode = self.nodeList[connection.output_neuron]
 
         connection.disable()
 
-        newNode = nodeGene('hidden', len(connectionList))
+        newNode = NodeGene(len(self.connectionList), 'hidden')
 
-        inToNew = connectionGene(0, inNode.id, newNode.id, 1, true)
-        newToOut = connectionGene(0, newNode.id, outNode.id, connection.weight, true)
+        inToNew = ConnectionGene(innovation_number.getInnovation(), inNode.id, newNode.id, 1, True)
+        newToOut = ConnectionGene(innovation_number.getInnovation(), newNode.id, outNode.id, connection.weight, True)
 
-        nodeList.append(newNode)
-        connectionList.append(inToNew)
-        connectionList.append(newToOut)
+        self.nodeList.update({newNode.id : newNode.copy()})
+        self.connectionList.update({inToNew.innovation_number : inToNew})
+        self.connectionList.update({newToOut.innovation_number : newToOut})
 
     @staticmethod
     def crossover(parent1, parent2):
