@@ -5,9 +5,9 @@ import random
 
 class Genome:
 
-    def __init__(self):
-        self.nodeList = {}
-        self.connectionList = {}
+    def __init__(self, nodeList = {}, connectionList = {}):
+        self.nodeList = nodeList
+        self.connectionList = connectionList
 
     def getNodeGenes(self):
         return self.nodeList
@@ -100,3 +100,6 @@ class Genome:
                 child.addConnectionGenes(childConGene)
 
         return child
+
+    def clone(self):
+        return Genome(nodeList = self.nodeList, connectionList = self.connectionList)
