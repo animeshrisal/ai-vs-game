@@ -103,3 +103,11 @@ class Genome:
 
     def clone(self):
         return Genome(nodeList = self.nodeList, connectionList = self.connectionList)
+
+    def calculateOutput(self):
+        for x in self.nodeList.values():
+            if x.nodeType != 'output':
+                x.fire()
+
+            if x.nodeType == 'output':
+                print(x.inputValue)

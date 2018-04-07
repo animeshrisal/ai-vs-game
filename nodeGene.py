@@ -8,6 +8,7 @@ class NodeGene:
         self.inputValue = inputValue
         self.inputGenes = inputGenes
         self.outputGenes = outputGenes
+        self.sentOutput = 0.0
 
     def activation(self):
         return self.sigmoid(self.input)
@@ -25,8 +26,11 @@ class NodeGene:
         self.inputValue += inputValue
 
     def fire(self):
-        for connectionGene in outputGenes.values():
-            connectionGene.output_neuron.addInput((self.activation() * connectionGene.weight) if connectionGene.enabled else 0)
+        for connectionGene in self.outputGenes.values():
+            connectionGene.output_neuron.addInput((self.inputValue * connectionGene.weight) if connectionGene.enabled else 0)
+
+    def sendOutput():
+        return sigmoid(inputValue)
 
     def clone(self):
         return deepcopy(self)
