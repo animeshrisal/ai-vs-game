@@ -24,7 +24,7 @@ class Genome:
     def addConnectionMutation(self, innovation_number):
         node1 = self.nodeList[random.randint(1, len(self.nodeList))]
         node2 = self.nodeList[random.randint(1, len(self.nodeList))]
-        weight = random.uniform(0, 1)
+        weight = random.uniform(-1, 1)
 
         reverse = False
 
@@ -51,11 +51,11 @@ class Genome:
         connectionExists = False
 
         for connection in self.connectionList.values():
-            if(connection.input_neuron == node1.id and connection.output_neuron == node2.id):
+            if(connection.input_neuron.id == node1.id and connection.output_neuron.id == node2.id):
                 connectionExists = True
                 break
             
-            elif(connection.input_neuron == node2.id and connection.output_neuron == node1.id):
+            elif(connection.input_neuron.id == node2.id and connection.output_neuron.id == node1.id):
                 connectionExists = True
                 break
 
@@ -63,7 +63,7 @@ class Genome:
             return
 
 
-        newConnection = ConnectionGene(innovation_number.getInnovation(), node2.id if reverse else node1.id, node1.id if reverse else node2.id, weight, True)
+        newConnection = ConnectionGene(innovation_number.getInnovation(), node2 if reverse else node1, node1 if reverse else node2, weight, True)
         self.connectionList.update({newConnection.innovation_number : newConnection})
 
     def addNodeMutation(self, innovation_number):

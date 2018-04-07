@@ -12,10 +12,10 @@ class NodeGene:
         return self.sigmoid(self.input)
 
     def addInputGene(self, inputGene):
-        inputGenes.update({inputGene.innovation_number: inputGene})
+        self.inputGenes.update({inputGene.innovation_number: inputGene})
 
     def addOutputGene(self, outputGene):
-        outputGenes.update({outputGene.innovation_number: outputGene})
+        self.outputGenes.update({outputGene.innovation_number: outputGene})
 
     def sigmoid(self, input):
         return 1 / (1 + math.exp(-self.input)) 
@@ -26,15 +26,14 @@ class NodeGene:
     def fire(self):
         for connectionGene in outputGenes.values():
             connectionGene.output_neuron.addInput((self.activation() * connectionGene.weight) if connectionGene.enabled else 0)
-
-    '''
+    
     def copy(self):
         return NodeGene(id = self.id, 
                         nodeType = self.nodeType, 
                         inputValue = self.inputValue, 
                         inputGenes = self.inputGenes, 
                         outputGenes = self.outputGenes)
-    '''
+   
 
 
 
