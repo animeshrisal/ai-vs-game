@@ -16,17 +16,17 @@ parent1.addNodeGenes(NodeGene(4, 'output'))
 parent1.addNodeGenes(NodeGene(5, 'hidden'))
 
 
-parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), 1, 4, 1, True))
-parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), 2, 4, 1, False))
-parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), 3, 4, 1, True))
-parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), 2, 5, 1, True))
-parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), 5, 4, 1, True))
-parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), 1, 5, 1, True))
+parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[1], parent1.getNodeGenes()[4], 1, True))
+parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[2], parent1.getNodeGenes()[4], 1, False))
+parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[3], parent1.getNodeGenes()[4], 1, True))
+parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[2], parent1.getNodeGenes()[5], 1, True))
+parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[5], parent1.getNodeGenes()[4], 1, True))
+parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[1], parent1.getNodeGenes()[5], 1, True))
 
 parent1.addNodeMutation(innovation_value)
 
 for x in parent1.getConnectionGenes():
-    print(x, parent1.getConnectionGenes()[x].input_neuron, parent1.getConnectionGenes()[x].output_neuron, parent1.getConnectionGenes()[x].enabled)
+    print(x, parent1.getConnectionGenes()[x].input_neuron.id, parent1.getConnectionGenes()[x].output_neuron.id, parent1.getConnectionGenes()[x].enabled)
 
 for x in parent1.getNodeGenes():
     print(parent1.getNodeGenes()[x].id, parent1.getNodeGenes()[x].nodeType)

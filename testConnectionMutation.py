@@ -25,9 +25,8 @@ parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), pare
 
 parent1.addConnectionMutation(innovation_value)
 
-for x in parent1.getConnectionGenes():
-    print(x, parent1.getConnectionGenes()[x].input_neuron.id, parent1.getConnectionGenes()[x].output_neuron.id, parent1.getConnectionGenes()[x].enabled, parent1.getConnectionGenes()[x].weight)
-
 for x in parent1.getNodeGenes():
-    print(parent1.getNodeGenes()[x].id, parent1.getNodeGenes()[x].nodeType, parent1.getNodeGenes()[x].inputGenes[1])
-
+    print(parent1.getNodeGenes()[x].id, 
+        parent1.getNodeGenes()[x].nodeType, 
+        parent1.getNodeGenes()[x].inputGenes, 
+        parent1.getNodeGenes()[x].outputGenes)

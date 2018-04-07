@@ -70,17 +70,17 @@ class Genome:
         randomValue = random.randint(1, len(self.connectionList) -1)
         connection = self.connectionList[randomValue]
 
-        inNode = self.nodeList[connection.input_neuron]
-        outNode = self.nodeList[connection.output_neuron]
+        inNode = self.nodeList[connection.input_neuron.id]
+        outNode = self.nodeList[connection.output_neuron.id]
 
         connection.disable()
 
         newNode = NodeGene(len(self.connectionList), 'hidden')
 
-        inToNew = ConnectionGene(innovation_number.getInnovation(), inNode.id, newNode.id, 1, True)
-        newToOut = ConnectionGene(innovation_number.getInnovation(), newNode.id, outNode.id, connection.weight, True)
+        inToNew = ConnectionGene(innovation_number.getInnovation(), inNode, newNode, 1, True)
+        newToOut = ConnectionGene(innovation_number.getInnovation(), newNode, outNode, connection.weight, True)
 
-        self.nodeList.update({newNode.id : newNode.copy()})
+        self.nodeList.update({newNode.id : newNode.clone()})
         self.connectionList.update({inToNew.innovation_number : inToNew})
         self.connectionList.update({newToOut.innovation_number : newToOut})
 
