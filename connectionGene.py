@@ -1,4 +1,6 @@
 from nodeGene import NodeGene
+from copy import deepcopy
+
 
 class ConnectionGene:
     
@@ -17,15 +19,10 @@ class ConnectionGene:
         if self.weight is None:
             self.weight = 0.5
 
-
-
     def disable(self):
         self.enabled = False
 
-    def copy(self):
-        return ConnectionGene(innovation_number = self.innovation_number, 
-                    input_neuron = self.input_neuron, 
-                    output_neuron = self.output_neuron, 
-                    weight = self.weight, 
-                    enabled = self.enabled)
+    def clone(self):
+        return deepcopy(self)
+
 

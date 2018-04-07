@@ -16,10 +16,10 @@ class Genome:
         return self.connectionList
 
     def addNodeGenes(self, node):
-        self.nodeList.update({node.id: node.copy()})
+        self.nodeList.update({node.id: node.clone()})
 
-    def addConnectionGenes(self, ConnectionGene):
-        self.connectionList.update({ConnectionGene.innovation_number: ConnectionGene.copy()})
+    def addConnectionGenes(self, conn):
+        self.connectionList.update({conn.innovation_number: conn.clone()})
 
     def addConnectionMutation(self, innovation_number):
         node1 = self.nodeList[random.randint(1, len(self.nodeList))]
