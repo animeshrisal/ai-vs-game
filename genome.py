@@ -108,6 +108,6 @@ class Genome:
         for x in self.nodeList.values():
             if x.nodeType != 'output':
                 x.fire()
-
-            if x.nodeType == 'output':
-                print(x.inputValue)
+            else:    
+                x.calculateOutput()
+                print(x.getOutput())
