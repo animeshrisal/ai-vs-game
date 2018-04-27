@@ -24,6 +24,6 @@ calc.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), calc.ge
 calc.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), calc.getNodeGenes()[2], calc.getNodeGenes()[4], 0.3, True))
 calc.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), calc.getNodeGenes()[4], calc.getNodeGenes()[3], 0.3, True))
 
-
+calc.addNodeMutation(innovation_value)
 
 calc.calculateOutput()

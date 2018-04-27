@@ -45,7 +45,6 @@ class NodeGene:
     def addInput(self, inputValue):
         self.inputValue += inputValue
         self.recieved_inputs += 1
-        print(self.id, 'recieved input')
 
         if(self.nodeType != 'input'):
             if self.check_if_recieved():
