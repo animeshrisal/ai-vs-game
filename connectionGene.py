@@ -23,6 +23,6 @@ class ConnectionGene:
         self.enabled = False
 
     def clone(self):
-        return deepcopy(self)
+        return self
 
 
