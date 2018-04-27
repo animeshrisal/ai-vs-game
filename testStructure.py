@@ -9,7 +9,9 @@ innovation_value = Innovation()
 
 for x in range(1,4):
     node = NodeGene(x, 'input')
+    node.addInput(1)
     parent1.addNodeGenes(node)
+
     
 parent1.addNodeGenes(NodeGene(4, 'output'))
 
@@ -35,6 +37,5 @@ for x in parent1.getConnectionGenes():
 
 for x in parent1.getNodeGenes():
     print(parent1.getNodeGenes()[x].id, parent1.getNodeGenes()[x].nodeType)
-
-                    
+ 
 parent1.calculateOutput()

@@ -108,16 +108,14 @@ class Genome:
         while not complete:
             complete = True
             for x in self.nodeList.values():
-                print(x.id, x.has_fired(), x.recieved_inputs, len(x.inputGenes))
-                if x.nodeType != 'output':
-                    if x.ready():
-                        x.fire()
+                print(x.id , ' ',len(x.inputGenes), ' ', x.recieved_inputs)
+                if x.ready():
+                    x.fire()
 
-                    if not x.has_fired():
-                        complete = False
-                else:    
-                    x.calculateOutput()
+                if not x.has_fired():
+                    complete = False
+
+                print(x.id, x.has_fired(), x.inputValue)
             
-            print(x.getOutput())
 
        
