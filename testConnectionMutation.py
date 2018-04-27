@@ -15,7 +15,6 @@ for x in range(1,4):
 parent1.addNodeGenes(NodeGene(4, 'output'))
 parent1.addNodeGenes(NodeGene(5, 'hidden'))
 
-
 parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[1], parent1.getNodeGenes()[4], 1, True))
 parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[2], parent1.getNodeGenes()[4], 1, False))
 parent1.addConnectionGenes(ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[3], parent1.getNodeGenes()[4], 1, True))

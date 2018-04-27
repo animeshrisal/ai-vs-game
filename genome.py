@@ -1,6 +1,5 @@
 from connectionGene import ConnectionGene
 from nodeGene import NodeGene
-import numpy as np
 import random
 
 class Genome:
@@ -75,7 +74,7 @@ class Genome:
 
         connection.disable()
 
-        newNode = NodeGene(len(self.connectionList), 'hidden')
+        newNode = NodeGene(len(self.nodeList) + 1, 'hidden')
 
         inToNew = ConnectionGene(innovation_number.getInnovation(), inNode, newNode, 1, True)
         newToOut = ConnectionGene(innovation_number.getInnovation(), newNode, outNode, connection.weight, True)
@@ -105,9 +104,20 @@ class Genome:
         return Genome(nodeList = self.nodeList, connectionList = self.connectionList)
 
     def calculateOutput(self):
-        for x in self.nodeList.values():
-            if x.nodeType != 'output':
-                x.fire()
-            else:    
-                x.calculateOutput()
-                print(x.getOutput())
+        complete = False
+        while not complete:
+            complete = True
+            for x in self.nodeList.values():
+                print(x.id, x.has_fired(), x.recieved_inputs, len(x.inputGenes))
+                if x.nodeType != 'output':
+                    if x.ready():
+                        x.fire()
+
+                    if not x.has_fired():
+                        complete = False
+                else:    
+                    x.calculateOutput()
+            
+            print(x.getOutput())
+
+       

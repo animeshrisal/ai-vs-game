@@ -1,0 +1,3 @@
+#ignoring neuroevolution for windows virtual environment
+neuroevolution
+*.pyc

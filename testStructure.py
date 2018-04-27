@@ -12,17 +12,17 @@ for x in range(1,4):
     parent1.addNodeGenes(node)
     
 parent1.addNodeGenes(NodeGene(4, 'output'))
-parent1.addNodeGenes(NodeGene(5, 'hidden'))
 
-for x in parent1.getNodeGenes():
-    print(parent1.getNodeGenes()[x].id, 
-        parent1.getNodeGenes()[x].nodeType, 
-        parent1.getNodeGenes()[x].inputGenes, 
-        parent1.getNodeGenes()[x].outputGenes)
 
-conn1 = ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[1], parent1.getNodeGenes()[4], 1, True)
+conn1 = ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[1], parent1.getNodeGenes()[4], 0.5, True)
+conn2 = ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[2], parent1.getNodeGenes()[4], 0.5, True)
+conn3 = ConnectionGene(innovation_value.getInnovation(), parent1.getNodeGenes()[3], parent1.getNodeGenes()[4], 0.5, True)
+
 
 parent1.addConnectionGenes(conn1)
+parent1.addConnectionGenes(conn2)
+parent1.addConnectionGenes(conn3)
+parent1.addNodeMutation(innovation_value)
 
 for x in parent1.getNodeGenes():
     print(parent1.getNodeGenes()[x].id, 
@@ -31,4 +31,10 @@ for x in parent1.getNodeGenes():
         parent1.getNodeGenes()[x].outputGenes)
 
 for x in parent1.getConnectionGenes():
-    print(parent1.getConnectionGenes()[x].output_neuron.id)
+    print(x, parent1.getConnectionGenes()[x].input_neuron.id, parent1.getConnectionGenes()[x].output_neuron.id, parent1.getConnectionGenes()[x].enabled)
+
+for x in parent1.getNodeGenes():
+    print(parent1.getNodeGenes()[x].id, parent1.getNodeGenes()[x].nodeType)
+
+                    
+parent1.calculateOutput()

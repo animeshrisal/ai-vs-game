@@ -9,6 +9,19 @@ class NodeGene:
         self.inputGenes = inputGenes
         self.outputGenes = outputGenes
         self.outputValue = 0.0
+        self.recieved_inputs = 0
+        self.sent_output = False
+
+    def expected_inputs(self):
+        return 0 if self.nodeType == 'input' else len(self.inputGenes)
+
+    def has_fired(self):
+        return self.sent_output
+
+
+    def ready(self):
+        recieved_all_inputs = (self.recieved_inputs == self.expected_inputs())
+        return (not self.sent_output and recieved_all_inputs)
 
     def activation(self):
         return self.sigmoid(self.input)
@@ -24,8 +37,10 @@ class NodeGene:
 
     def addInput(self, inputValue):
         self.inputValue += inputValue
+        self.recieved_inputs += 1
 
     def fire(self):
+        self.sent_output = True
         for connectionGene in self.outputGenes.values():
             connectionGene.output_neuron.addInput((self.inputValue * connectionGene.weight) if connectionGene.enabled else 0)
 
