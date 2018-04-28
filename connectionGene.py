@@ -22,6 +22,9 @@ class ConnectionGene:
     def disable(self):
         self.enabled = False
 
+    def mutate_weight(self):
+        
+
     def clone(self):
         return self
 
