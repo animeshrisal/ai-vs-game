@@ -1,5 +1,8 @@
 from nodeGene import NodeGene
 from copy import deepcopy
+import random as rand
+import config
+
 
 
 class ConnectionGene:
@@ -17,13 +20,21 @@ class ConnectionGene:
         self.weight = weight
 
         if self.weight is None:
-            self.weight = 0.5
+            self.randomize_weight()
 
     def disable(self):
         self.enabled = False
 
     def mutate_weight(self):
-        
+        if rand.uniform() < config.WEIGHT_MUTATION_RATE:
+            if rand.uniform() < config.UNIFORM_WEIGHT_MUTATION_RATE:
+                self.weight += rand.uniform(-0.1, 0.1)
+
+            else:
+                self.randomize_weight()
+                
+    def randomize_weight(self):
+        self.weight = rand.uniform(-2, 2)
 
     def clone(self):
         return self
