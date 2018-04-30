@@ -10,6 +10,8 @@ class Species():
 
         self.genomes = {i:genome.clone() for i in range(self.populationSize)}
 
+    
+
     @staticmethod
     def crossover(parent1, parent2):
         child = Genome()
@@ -20,6 +22,7 @@ class Species():
         for parent1Connection in parent1.getConnectionGenes().values():
             if parent1Connection.innovation_number in parent2.getConnectionGenes(): 
                 truthValue = bool(random.getrandbits(1))
+                print(truthValue)
                 childConGene = parent1Connection.copy() if truthValue else parent2.getConnectionGenes()[parent1Connection.innovation_number].copy()
             else:
                 childConGene = parent1Connection.copy()

@@ -86,6 +86,7 @@ class Genome:
     def clone(self):
         return Genome(nodeList = self.nodeList, connectionList = self.connectionList)
 
+
     def calculateOutput(self):
         complete = False
         while not complete:
@@ -99,6 +100,8 @@ class Genome:
                     complete = False
 
                 print(x.id, x.has_fired(), x.inputValue)
+
+    
             
 
        
