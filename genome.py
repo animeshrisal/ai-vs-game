@@ -1,6 +1,7 @@
 from connectionGene import ConnectionGene
 from nodeGene import NodeGene
 import random
+import math
 
 class Genome:
 
@@ -124,4 +125,9 @@ class Genome:
             if not g_id in comparison_genome:
                 disjoint_genes.append(genome)
 
-        return disjoint_genes       
+        return disjoint_genes      
+
+    def get_avg_weight_difference(self, comparison_genome):
+        avg_weight_self = sum(c_gene.weight for c_gene in self.connectionList.values() / len(self.connectionList))
+        avg_weight_comp = sum(c_gene.weight for c_gene in comparison_genome.connectionList.values() / len(comparison_genome.connectionList))
+        return abs(avg_weight_self - avg_weight_comp)

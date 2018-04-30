@@ -42,5 +42,4 @@ class ConnectionGene:
     def copy(self):
         return self
 
-    def get_excess_genes(self, comparison_genome):
-        excess_genes = []
+
