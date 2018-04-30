@@ -101,6 +101,17 @@ class Genome:
 
                 print(x.id, x.has_fired(), x.inputValue)
 
+    def get_excess_genes(self, comparison_genome):
+        excess_genes = []
+        largest_innovation_id = max(self.connectionList.keys)
+
+        for g_id, genome in comparison_genome.connectionList.items():
+            if g_id > largest_innovation_id:
+                excess_genes.append(genome)
+
+        return excess_genes
+
+
     
             
 
