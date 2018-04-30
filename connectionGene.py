@@ -39,4 +39,5 @@ class ConnectionGene:
     def clone(self):
         return self
 
-
+    def copy(self):
+        return self

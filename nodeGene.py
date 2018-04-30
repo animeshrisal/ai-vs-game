@@ -61,6 +61,9 @@ class NodeGene:
     def clone(self):
         return deepcopy(self)
 
+    def copy(self):
+        return self
+
 
 
 
