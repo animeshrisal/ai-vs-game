@@ -112,7 +112,16 @@ class Genome:
         return excess_genes
 
 
-    
-            
+    def get_disjoint_genes(self, comparison_genome):
+        disjoint_genes = []
+        largest_innovation_id = max(self.connectionList.keys)
 
-       
+        for g_id, genome in comparison_genome.connectionList.items():
+            if not g_id in self.connectionList and g_id < largest_innovation_id:
+                disjoint_genes.append(genome)
+
+        for g_id, genome in self.connectionList.items():
+            if not g_id in comparison_genome:
+                disjoint_genes.append(genome)
+
+        return disjoint_genes       
