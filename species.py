@@ -3,16 +3,13 @@ import random
 
 class Species():
 
-    def __init__(self, id, populationSize, genome):
+    def __init__(self, id, population_size, genome):
         self.id = id
-        self.populationSize = populationSize
+        self.population_size = population_size
         self.generationNumber = 0
 
-        self.genomes = {i:genome.clone() for i in range(self.populationSize)}
+        self.genomes = {i:genome.clone() for i in range(self.population_size)}
 
-    
-
-    @staticmethod
     def crossover(parent1, parent2):
         child = Genome()
 

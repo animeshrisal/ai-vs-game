@@ -5,7 +5,7 @@ import math
 
 class Genome:
 
-    def __init__(self, nodeList = {}, connectionList = {}):
+    def __init__(self, topology):
         self.nodeList = nodeList
         self.connectionList = connectionList
 
