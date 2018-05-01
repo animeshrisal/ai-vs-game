@@ -8,7 +8,7 @@ class NEAT(object):
     def __init__(self):
 
         self.population = 50
-        self.initial_topology = (20, 2)
+        self.initial_topology = (21, 2) #20 from the game data + 1 is bias weight 
 
         self.species_number = 0
         self.species = {}
