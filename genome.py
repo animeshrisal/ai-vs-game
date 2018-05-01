@@ -1,7 +1,8 @@
 from connectionGene import ConnectionGene
 from nodeGene import NodeGene
 import random
-import math
+import config
+from copy import deepcopy
 
 class Genome:
 
@@ -85,7 +86,7 @@ class Genome:
         self.connectionList.update({newToOut.innovation_number : newToOut})
 
     def clone(self):
-        return Genome(nodeList = self.nodeList, connectionList = self.connectionList)
+        return deepcopy(self)
 
 
     def calculateOutput(self):
@@ -131,3 +132,19 @@ class Genome:
         avg_weight_self = sum(c_gene.weight for c_gene in self.connectionList.values() / len(self.connectionList))
         avg_weight_comp = sum(c_gene.weight for c_gene in comparison_genome.connectionList.values() / len(comparison_genome.connectionList))
         return abs(avg_weight_self - avg_weight_comp)
+
+    def is_compatible(self, comparison_genome):
+        normalize_const = max(len(self.connectionList), len(comparison_genome.connectionList))
+        normalize_const = normalize_const if normalize_const > 20 else 1
+
+        num_excess_genes = len(self.get_excess_genes(comparison_genome))
+        num_disjoint_genes = len(self.get_disjoint_genes(comparison_genome))
+        avg_weight_difference = self.get_avg_weight_difference(comparison_genome)
+
+        compatibility_score = (( num_excess_genes * config.EXCESS_COMPATIBILITY_CONSTANT) / normalize_const) +\
+                            (( num_disjoint_genes * config.DISJOINT_COMPATIBILITY_CONSTANT) / normalize_const) +\
+                            (avg_weight_difference * config.WEIGHT_COMPATIBILITY_CONSTANT)
+
+
+        compatible = compatibility_score < config.COMPATIBILITY_THRESHOLD
+        return compatible
