@@ -68,7 +68,7 @@ class NodeGene:
         self.outputValue = 0.0
         self.recieved_inputs = 0
         self.sent_output = False
-        self.recieved_all_inputs = False
+
 
 
 
