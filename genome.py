@@ -48,6 +48,7 @@ class Genome:
                     self.connectionList[innovation_number] = ConnectionGene(innovation_number, input_neuron, output_neuron)
 
 
+    ###Useful for testing
     def getNodeGenes(self):
         return self.nodeList
 
@@ -59,6 +60,8 @@ class Genome:
 
     def addConnectionGenes(self, conn):
         self.connectionList.update({conn.innovation_number: conn.clone()})
+
+    ###
 
     def addConnectionMutation(self, innovation_number):
         node1 = self.nodeList[random.randint(1, len(self.nodeList))]
