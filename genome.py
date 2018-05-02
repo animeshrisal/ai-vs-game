@@ -7,8 +7,28 @@ from copy import deepcopy
 class Genome:
 
     def __init__(self, topology, innovation):
+        
+        self.species_id = None
+        self.generation_id = None
+        self.fitness = 0
+
+        self.num_input_neurons = topology[0]
+        self.num_output_neurons = topology[1]
+
+        self.current_neuron_id = 0
+        self.innovation = innovation
+
         self.nodeList = {}
         self.connectionList = {}
+
+
+        #Creating neurons
+        i = 0
+        self.input_neurons = []
+        while i < self.num_input_neurons:
+            new_neuron_id = self.get_next_neuron_id()
+            self.neurons[new_neuron_id] = NodeGene(new_neuron_id, "Input")
+            self.input_neurons.append(self.neurons[new_neuron_id])
 
     def getNodeGenes(self):
         return self.nodeList
@@ -103,6 +123,12 @@ class Genome:
 
                 print(x.id, x.has_fired(), x.inputValue)
 
+        self.reset_nodes()
+
+    def reset_nodes(self):
+        for nodes in NodeGene:
+            nodes.reset_neuron()
+
     def get_excess_genes(self, comparison_genome):
         excess_genes = []
         largest_innovation_id = max(self.connectionList.keys)
@@ -149,3 +175,16 @@ class Genome:
         compatible = compatibility_score < config.COMPATIBILITY_THRESHOLD
         return compatible   
         
+    def set_fitness(self, fitness):
+        self.fitness = fitness
+
+    def set_generation(self, generation_id):
+        self.generation_id = generation_id
+
+    def set_species(self, species_id):
+        self.species_id = species_id
+
+    def get_next_neuron_id(self):
+        current_id = self.current_neuron_id
+        self.current_neuron_id += 1
+        return current_id
