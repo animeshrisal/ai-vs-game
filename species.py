@@ -14,10 +14,6 @@ class Species():
         self.avg_max_fitness_achieved = 0
         self.generation_with_max_fitness = 0
 
-        
-
-    
-
     def crossover(parent1, parent2):
         child = Genome()
 
