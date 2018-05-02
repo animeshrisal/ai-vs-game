@@ -1,6 +1,6 @@
 from innovation import Innovation
 import config
-import genome
+from genome import Genome
 from species import Species
 
 class NEAT(object):
@@ -20,8 +20,14 @@ class NEAT(object):
         initial_genome = Genome(self.initial_topology, self.innovation)
         self.create_new_speces(initial_genome, self.population)
 
-    def create_new_speces(self, initial_genome, population):
+    def create_new_species(self, initial_genome, population):
         self.species[self.species_number] = Species(self.species_number, population, initial_genome)
-        self.species += 1
+        self.species_number += 1
 
-    
+    def get_active_population(self):
+        active_population = 0
+        for species in self.species.values():
+            if species.active:
+                active_population += species.species_population 
+
+        return active_population
