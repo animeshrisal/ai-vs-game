@@ -22,13 +22,25 @@ class Genome:
         self.connectionList = {}
 
 
-        #Creating neurons
+        #Creating input neurons
         i = 0
         self.input_neurons = []
         while i < self.num_input_neurons:
             new_neuron_id = self.get_next_neuron_id()
             self.neurons[new_neuron_id] = NodeGene(new_neuron_id, "Input")
             self.input_neurons.append(self.neurons[new_neuron_id])
+            i += 1
+    
+        #Creating output neurons
+        i = 0
+        self.output_neurons = []
+        while i < self.num_output_neurons:
+            new_neuron_id = self.get_next_neuron_id()
+            self.neurons[new_neuron_id] = NodeGene(new_neuron_id, "Output")
+            i += 1
+
+        #Creating new connection genes
+        
 
     def getNodeGenes(self):
         return self.nodeList
@@ -138,7 +150,6 @@ class Genome:
                 excess_genes.append(genome)
 
         return excess_genes
-
 
     def get_disjoint_genes(self, comparison_genome):
         disjoint_genes = []
