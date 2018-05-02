@@ -26,3 +26,4 @@ class NEAT(object):
 
     
 neat = NEAT()
+print(neat.species)
