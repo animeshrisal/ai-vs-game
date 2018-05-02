@@ -23,3 +23,11 @@ class NEAT(object):
     def create_new_speces(self, initial_genome, population):
         self.species[self.species_number] = Species(self.species_number, population, initial_genome)
         self.species_number += 1
+
+    def get_active_population(self):
+        active_population = 0
+        for species in self.species.values():
+            if species.active:
+                active_population += species.species_population 
+
+        return active_population
