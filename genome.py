@@ -25,11 +25,12 @@ class Genome:
         #Creating input neurons
         i = 0
         self.input_neurons = []
-        while i < self.num_input_neurons:
+        while i < self.num_input_neurons-1:
             new_neuron_id = self.get_next_neuron_id()
             self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, "Input")
             self.input_neurons.append(self.nodeList[new_neuron_id])
             i += 1
+   
     
         #Creating output neurons
         i = 0
@@ -43,7 +44,7 @@ class Genome:
         #Creating new connection genes
         for input_neuron in self.input_neurons:
             for output_neuron in self.output_neurons:
-                if random.uniform(0, 1) > config.RANDOM_THRESHOLD:
+                if random.uniform(0, 1) < config.RANDOM_THRESHOLD: #Dont want every input node to connect to all output nodes.
                     innovation_number = self.innovation.getInnovation()
                     self.connectionList[innovation_number] = ConnectionGene(innovation_number, input_neuron, output_neuron)
 
