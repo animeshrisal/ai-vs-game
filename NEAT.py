@@ -20,7 +20,7 @@ class NEAT(object):
         initial_genome = Genome(self.initial_topology, self.innovation)
         self.create_new_speces(initial_genome, self.population)
 
-    def create_new_speces(self, initial_genome, population):
+    def create_new_species(self, initial_genome, population):
         self.species[self.species_number] = Species(self.species_number, population, initial_genome)
         self.species_number += 1
 
