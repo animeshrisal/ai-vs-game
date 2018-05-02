@@ -113,19 +113,20 @@ class Genome:
             randomValue = random.randint(1, len(self.connectionList) -1)
             connection = self.connectionList[randomValue]
 
-            connection.disable()
+            if connection.enabled:
+                connection.disable()
 
-            inNode = self.nodeList[connection.input_neuron.id]
-            outNode = self.nodeList[connection.output_neuron.id]
+                inNode = self.nodeList[connection.input_neuron.id]
+                outNode = self.nodeList[connection.output_neuron.id]
 
-            newNode = NodeGene(len(self.nodeList) + 1, 'hidden')
+                newNode = NodeGene(len(self.nodeList) + 1, 'hidden')
 
-            inToNew = ConnectionGene(innovation_number.getInnovation(), inNode, newNode, 1, True)
-            newToOut = ConnectionGene(innovation_number.getInnovation(), newNode, outNode, connection.weight, True)
+                inToNew = ConnectionGene(innovation_number.getInnovation(), inNode, newNode, 1, True)
+                newToOut = ConnectionGene(innovation_number.getInnovation(), newNode, outNode, connection.weight, True)
 
-            self.nodeList.update({newNode.id : newNode})
-            self.connectionList.update({inToNew.innovation_number : inToNew})
-            self.connectionList.update({newToOut.innovation_number : newToOut})
+                self.nodeList.update({newNode.id : newNode})
+                self.connectionList.update({inToNew.innovation_number : inToNew})
+                self.connectionList.update({newToOut.innovation_number : newToOut})
 
     def clone(self):
         return deepcopy(self)
