@@ -6,9 +6,9 @@ from copy import deepcopy
 
 class Genome:
 
-    def __init__(self, topology):
-        self.nodeList = nodeList
-        self.connectionList = connectionList
+    def __init__(self, topology, innovation):
+        self.nodeList = {}
+        self.connectionList = {}
 
     def getNodeGenes(self):
         return self.nodeList
@@ -147,4 +147,5 @@ class Genome:
 
 
         compatible = compatibility_score < config.COMPATIBILITY_THRESHOLD
-        return compatible
+        return compatible   
+        

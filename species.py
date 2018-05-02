@@ -9,6 +9,14 @@ class Species():
         self.generationNumber = 0
 
         self.genomes = {i:genome.clone() for i in range(self.population_size)}
+        self.times_stagnated = 0
+        self.active = True
+        self.avg_max_fitness_achieved = 0
+        self.generation_with_max_fitness = 0
+
+        
+
+    
 
     def crossover(parent1, parent2):
         child = Genome()

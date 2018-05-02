@@ -1,6 +1,6 @@
 from innovation import Innovation
 import config
-import genome
+from genome import Genome
 from species import Species
 
 class NEAT(object):
@@ -22,6 +22,7 @@ class NEAT(object):
 
     def create_new_speces(self, initial_genome, population):
         self.species[self.species_number] = Species(self.species_number, population, initial_genome)
-        self.species += 1
+        self.species_number += 1
 
     
+neat = NEAT()
