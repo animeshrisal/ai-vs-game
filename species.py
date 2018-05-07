@@ -6,7 +6,7 @@ class Species():
     def __init__(self, id, population_size, genome):
         self.id = id
         self.population_size = population_size
-        self.generationNumber = 0
+        self.generation_number = 0
         self.representative = genome 
 
         self.genomes = {i:genome.clone() for i in range(self.population_size)}
@@ -24,9 +24,12 @@ class Species():
 
     def evolve(self):
         if self.active:
-            survivor_id = self.select_survivor()
-        
-        pass
+            survivor_ids = self.select_survivor()
+            self.create_next_generation(survivor_ids)
+            self.generation_number += 1
+            for genome in self.genomes.values():
+                genome.set_generaton(self.generation_number)
+
 
     def get_survivors(self):
         sorted_genomes_id = sorted(self.genomes, key=lambda k: self.genomes[k].fitness, reverse=True)
