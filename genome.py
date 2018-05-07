@@ -64,6 +64,9 @@ class Genome:
 
     ###
     def mutate(self):
+        for connection in self.connectionList.values():
+            connection.mutate()
+            
         if random.uniform() < config.ADD_GENE_MUTATION:
 
             node1 = self.nodeList[random.randint(1, len(self.nodeList))]
