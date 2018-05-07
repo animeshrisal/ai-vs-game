@@ -1,5 +1,6 @@
 from genome import Genome
 import random
+import config
 
 class Species():
 
@@ -18,6 +19,7 @@ class Species():
         self.active = True
         self.avg_max_fitness_achieved = 0
         self.generation_with_max_fitness = 0
+        
 
     def generate_fitness(self):
         pass
@@ -62,13 +64,31 @@ class Species():
     
         while(genome_id < self.population_size):
             #crossover happens here
+            pass
 
+    
         
-        self.genomes = genomes
+    def culling(self, new_average_fitness):
+        if new_average_fitness > self.avg_max_fitness_achieved:
+            self.avg_max_fitness_achieved = new_average_fitness
+            self.generation_with_max_fitness = self.generation_number
 
+        if(self.generation_number - self.generation_with_max_fitness) > config.STAGNATED_SPECIES_THRESHOLD:
+            self.times_stagnated += 1
 
-            
+            if self.times_stagnated > config.STAGNATIONS_ALLOWED:
+                self.active = False #Dead Species
 
+            else:
+                self.generation_with_max_fitness = self.generation_number
+                self.avg_max_fitness_achieved = 0
 
+                genome = self.genomes[0]
 
+                self.genomes = {i:genome.clone() for i in range(self.population_size)}
+
+                for genome in self.genomes.values():
+                    pass #reinitialize genome
+
+                
     

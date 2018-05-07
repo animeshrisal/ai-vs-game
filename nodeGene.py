@@ -2,6 +2,8 @@ import math
 from copy import deepcopy
 
 class NodeGene:
+
+    #Initializing neurons
     def __init__(self, id, nodeType, inputValue = 0.0, inputGenes = {}, outputGenes = {}):
         self.id = id
         self.nodeType = nodeType
@@ -39,6 +41,7 @@ class NodeGene:
     def addOutputGene(self, outputGene):
         self.outputGenes[outputGene.innovation_number] = outputGene
 
+    #Activation function
     def sigmoid(self, input):
         return 1 / (1 + math.exp(-input)) 
 
@@ -50,6 +53,8 @@ class NodeGene:
             if self.check_if_recieved():
                 self.activation()
         
+    
+    #The method where the passing of data from one neuron to next happens
     def fire(self):
         self.sent_output = True
         for connectionGene in self.outputGenes.values():
