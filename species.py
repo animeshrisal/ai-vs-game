@@ -54,4 +54,21 @@ class Species():
 
         return child
 
+    def create_next_generation(self, ids):
+        genomes = {}
+
+        genomes[0] = self.genomes[ids[0]].clone()
+        genome_id = 1
+    
+        while(genome_id < self.population_size):
+            #crossover happens here
+
+        
+        self.genomes = genomes
+
+
+            
+
+
+
     
