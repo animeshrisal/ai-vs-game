@@ -20,6 +20,17 @@ class Species():
         self.avg_max_fitness_achieved = 0
         self.generation_with_max_fitness = 0
         
+    def run_generation(self):
+        if self.active:
+            species_fitness = self.generate_fitness()
+
+            avg_species_fitness = float(species_fitness)/float(self.population_size)
+            self.culling(avg_species_fitness)
+            return avg_species_fitness if self.active else None
+
+        else:
+            return None 
+
 
     def generate_fitness(self):
         pass

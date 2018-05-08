@@ -21,13 +21,14 @@ class NEAT(object):
         self.create_new_speces(initial_genome, self.population)
 
 
-    '''
+    
     def start_evolution(self):
         while True:
 
             avg_fitness_scores = {}
 
-    '''     
+            for individual_species_id, individual_species in self.species.items():
+                     
 
     def create_new_species(self, initial_genome, population):
         self.species[self.species_number] = Species(self.species_number, population, initial_genome)
