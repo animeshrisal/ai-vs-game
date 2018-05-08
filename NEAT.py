@@ -28,7 +28,17 @@ class NEAT(object):
             avg_fitness_scores = {}
 
             for individual_species_id, individual_species in self.species.items():
-                     
+                avg_fitness = individual_species.run_generation():
+
+                if avg_fitness != None:
+                    avg_fitness_scores[individual_species_id] = avg_fitness
+
+            for individual_species_id, individual_species in self.species.items():
+                individual_species.evolve()
+
+            if config.SPECIATION:
+                self.perform_speciation() #left to write
+
 
     def create_new_species(self, initial_genome, population):
         self.species[self.species_number] = Species(self.species_number, population, initial_genome)
