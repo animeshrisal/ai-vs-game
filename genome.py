@@ -109,9 +109,9 @@ class Genome:
             if(connectionExists or connectionImpossible):
                 return
 
-
-            newConnection = ConnectionGene(innovation_number.getInnovation(), node2 if reverse else node1, node1 if reverse else node2, weight, True)
-            self.connectionList.update({newConnection.innovation_number : newConnection})
+            innovation_number = self.innovation.getInnovation()
+            newConnection = ConnectionGene(innovation_number, node2 if reverse else node1, node1 if reverse else node2, weight, True)
+            self.connectionList.update({innovation_number : newConnection})
 
         if random.uniform() < config.ADD_NODE_MUTATION:
             randomValue = random.randint(1, len(self.connectionList) -1)
@@ -124,9 +124,10 @@ class Genome:
                 outNode = self.nodeList[connection.output_neuron.id]
 
                 newNode = NodeGene(len(self.nodeList) + 1, 'hidden')
+                innovation_number = self.innovation.getInnovation()
 
-                inToNew = ConnectionGene(innovation_number.getInnovation(), inNode, newNode, 1, True)
-                newToOut = ConnectionGene(innovation_number.getInnovation(), newNode, outNode, connection.weight, True)
+                inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
+                newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True)
 
                 self.nodeList.update({newNode.id : newNode})
                 self.connectionList.update({inToNew.innovation_number : inToNew})
@@ -153,8 +154,8 @@ class Genome:
         self.reset_nodes()
 
     def reset_nodes(self):
-        for nodes in NodeGene:
-            nodes.reset_neuron()
+        for x in self.nodeList:
+            self.nodeList[x].reset_neuron()
 
     def get_excess_genes(self, comparison_genome):
         excess_genes = []
