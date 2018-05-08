@@ -18,7 +18,7 @@ class NEAT(object):
         self.innovation = Innovation()
 
         initial_genome = Genome(self.initial_topology, self.innovation)
-        self.create_new_speces(initial_genome, self.population)
+        self.create_new_species(initial_genome, self.population)
 
 
     
@@ -28,7 +28,7 @@ class NEAT(object):
             avg_fitness_scores = {}
 
             for individual_species_id, individual_species in self.species.items():
-                avg_fitness = individual_species.run_generation():
+                avg_fitness = individual_species.run_generation()
 
                 if avg_fitness != None:
                     avg_fitness_scores[individual_species_id] = avg_fitness
