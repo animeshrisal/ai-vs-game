@@ -4,7 +4,7 @@ from copy import deepcopy
 class NodeGene:
 
     #Initializing neurons
-    def __init__(self, id, nodeType, inputValue = 0.0, inputGenes = {}, outputGenes = {}):
+    def __init__(self, id, nodeType, inputValue = 1, inputGenes = {}, outputGenes = {}):
         self.id = id
         self.nodeType = nodeType
         self.inputValue = inputValue
@@ -49,7 +49,7 @@ class NodeGene:
         self.inputValue += inputValue
         self.recieved_inputs += 1
 
-        if(self.nodeType != 'Input'):
+        if(self.nodeType != 'input'):
             if self.check_if_recieved():
                 self.activation()
         
