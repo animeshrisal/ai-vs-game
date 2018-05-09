@@ -17,7 +17,7 @@ class NodeGene:
 
     def expected_inputs(self):
         if self.nodeType == 'input':
-            return 1
+            return 0
         else:
             return len(self.inputGenes)
 
@@ -49,7 +49,7 @@ class NodeGene:
         self.inputValue += inputValue
         self.recieved_inputs += 1
 
-        if(self.nodeType != 'input'):
+        if(self.nodeType != 'Input'):
             if self.check_if_recieved():
                 self.activation()
         
