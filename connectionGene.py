@@ -26,8 +26,8 @@ class ConnectionGene:
         self.enabled = False
 
     def mutate_weight(self):
-        if rand.uniform() < config.WEIGHT_MUTATION_RATE:
-            if rand.uniform() < config.UNIFORM_WEIGHT_MUTATION_RATE:
+        if rand.uniform(0, 1) < config.WEIGHT_MUTATION_RATE:
+            if rand.uniform(0, 1) < config.UNIFORM_WEIGHT_MUTATION_RATE:
                 self.weight += rand.uniform(-0.1, 0.1)
 
             else:

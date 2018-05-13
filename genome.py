@@ -66,9 +66,9 @@ class Genome:
     ###
     def mutate(self):
         for connection in self.connectionList.values():
-            connection.mutate()
+            connection.mutate_weight()
             
-        if random.uniform() < config.ADD_GENE_MUTATION:
+        if random.uniform(0, 1) < config.ADD_GENE_MUTATION:
 
             node1 = self.nodeList[random.randint(1, len(self.nodeList))]
             node2 = self.nodeList[random.randint(1, len(self.nodeList))]
@@ -114,7 +114,7 @@ class Genome:
             newConnection = ConnectionGene(innovation_number, node2 if reverse else node1, node1 if reverse else node2, weight, True)
             self.connectionList.update({innovation_number : newConnection})
 
-        if random.uniform() < config.ADD_NODE_MUTATION:
+        if random.uniform(0, 1) < config.ADD_NODE_MUTATION:
             randomValue = random.randint(1, len(self.connectionList) -1)
             connection = self.connectionList[randomValue]
 
