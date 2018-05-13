@@ -143,7 +143,7 @@ class Genome:
         while not complete:
             complete = True
             for x in self.nodeList.values():
-                print(x.id , ' ',len(x.inputGenes), ' ', x.recieved_inputs)
+                print(x.id , ' ',len(x.inputGenes), ' ', len(x.outputGenes), ' ', x.recieved_inputs)
                 if x.ready():
                     x.fire()
 
