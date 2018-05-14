@@ -124,7 +124,7 @@ class Genome:
                 inNode = self.nodeList[connection.input_neuron.id]
                 outNode = self.nodeList[connection.output_neuron.id]
 
-                newNode = NodeGene(len(self.nodeList) + 1, 'hidden')
+                newNode = NodeGene(len(self.nodeList), 'hidden')
                 innovation_number = self.innovation.getInnovation()
 
                 inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
