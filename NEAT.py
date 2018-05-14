@@ -37,7 +37,7 @@ class NEAT(object):
                 individual_species.evolve()
 
             if config.SPECIATION:
-                self.perform_speciation() #left to write
+                self.perform_speciation() 
 
 
     def create_new_species(self, initial_genome, population):
@@ -59,3 +59,11 @@ class NEAT(object):
                     if not genome.is_compatible(individual_species.representative):
                         self.assign_genome(genome, species_id)
                         individual_species.delete_genome(genome_index)
+
+    def assign_genome(self, genome, species_id):
+        for individual_species_id, individual_species in self.species.items():
+            if genome.is_compatible(individual_species.representative):
+                species.add_genome(genome)
+                return
+
+        self.create_new_species(genome, self.population)
