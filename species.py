@@ -75,7 +75,20 @@ class Species():
     
         while(genome_id < self.population_size):
             #crossover happens here
-            pass
+            random_genome = self.genomes[random.randint(0, len(self.genomes) -1)]
+            random_genome_mate = self.genomes[random.randint(0, len(self.genomes) -1)]
+
+            if random.uniform(0, 1) > config.CROSSOVER_CHANCE:
+                genomes[genome_id] = random_genome
+
+            else:
+                genomes[genome_id] = self.crossover(random_genome, random_genome_mate)
+
+            genomes[genome_id].mutate()
+
+            genome_id += 1
+
+        self.genomes = genomes
 
     
         
