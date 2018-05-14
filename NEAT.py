@@ -51,3 +51,11 @@ class NEAT(object):
                 active_population += species.species_population 
 
         return active_population
+
+    def perform_speciation(self):
+        for species_id, individual_species in self.species.items():
+            if individual_species.active:
+                for genome_index, genome in individual_species.genomes.items():
+                    if not genome.is_compatible(individual_species.representative):
+                        self.assign_genome(genome, species_id)
+                        individual_species.delete_genome(genome_index)
