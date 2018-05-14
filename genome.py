@@ -216,3 +216,7 @@ class Genome:
         current_id = self.current_neuron_id
         self.current_neuron_id += 1
         return current_id
+
+    def reinitialize(self):
+        for connection_gene_id, connection_gene in self.connectionList.items():
+            connection_gene.randomize_weight()

@@ -101,6 +101,9 @@ class Species():
                 for genome in self.genomes.values():
                     pass #reinitialize genome
 
+        if (self.species_population < config.WEAK_SPECIES_THRESHOLD):
+            self.active = False #Too weak to live
+
     
     def add_genome(self, genome):
         genome.set_species(self.species_id)
