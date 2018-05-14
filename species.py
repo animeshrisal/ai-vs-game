@@ -101,5 +101,17 @@ class Species():
                 for genome in self.genomes.values():
                     pass #reinitialize genome
 
+    
+    def add_genome(self, genome):
+        genome.set_species(self.species_id)
+        genome.set_generaton(self.generation_number)
+        self.genome[self.species_population] = genome.clone()
+        self.species_population += 1
+
+    def delete_genome(self, genome_id):
+        self.genomes[genome_id] = self.genomes[self.species_population-1].clone()
+        del self.genomes[self.species_population-1]
+        self.species_population -= 1
+
                 
     
