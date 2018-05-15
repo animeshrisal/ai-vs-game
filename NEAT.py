@@ -44,14 +44,6 @@ class NEAT(object):
         self.species[self.species_number] = Species(self.species_number, population, initial_genome)
         self.species_number += 1
 
-    def get_active_population(self):
-        active_population = 0
-        for species in self.species.values():
-            if species.active:
-                active_population += species.species_population 
-
-        return active_population
-
     def perform_speciation(self):
         for species_id, individual_species in self.species.items():
             if individual_species.active:

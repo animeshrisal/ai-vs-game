@@ -70,8 +70,8 @@ class Genome:
             
         if random.uniform(0, 1) < config.ADD_GENE_MUTATION:
 
-            node1 = self.nodeList[random.randint(1, len(self.nodeList))]
-            node2 = self.nodeList[random.randint(1, len(self.nodeList))]
+            node1 = self.nodeList[random.randint(1, len(self.nodeList) - 1)]
+            node2 = self.nodeList[random.randint(1, len(self.nodeList) - 1)]
             weight = random.uniform(-1, 1)
 
             reverse = False
@@ -124,7 +124,7 @@ class Genome:
                 inNode = self.nodeList[connection.input_neuron.id]
                 outNode = self.nodeList[connection.output_neuron.id]
 
-                newNode = NodeGene(len(self.nodeList), 'hidden')
+                newNode = NodeGene(len(self.nodeList), 'hidden').clone()
                 innovation_number = self.innovation.getInnovation()
 
                 inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
