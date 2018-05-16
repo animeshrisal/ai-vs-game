@@ -45,9 +45,9 @@ class NEAT(object):
         self.species_number += 1
 
     def perform_speciation(self):
-        for species_id, individual_species in self.species.items():
+        for species_id, individual_species in list(self.species.items()):
             if individual_species.active:
-                for genome_index, genome in individual_species.genomes.items():
+                for genome_index, genome in list(individual_species.genomes.items()):
                     if not genome.is_compatible(individual_species.representative):
                         self.assign_genome(genome, species_id)
                         individual_species.delete_genome(genome_index)
@@ -55,7 +55,7 @@ class NEAT(object):
     def assign_genome(self, genome, species_id):
         for individual_species_id, individual_species in self.species.items():
             if genome.is_compatible(individual_species.representative):
-                species.add_genome(genome)
+                individual_species.add_genome(genome)
                 return
 
         self.create_new_species(genome, self.population)

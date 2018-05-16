@@ -160,7 +160,7 @@ class Genome:
 
     def get_excess_genes(self, comparison_genome):
         excess_genes = []
-        largest_innovation_id = max(self.connectionList.keys)
+        largest_innovation_id = max(self.connectionList.keys())
 
         for g_id, genome in comparison_genome.connectionList.items():
             if g_id > largest_innovation_id:
@@ -170,21 +170,21 @@ class Genome:
 
     def get_disjoint_genes(self, comparison_genome):
         disjoint_genes = []
-        largest_innovation_id = max(self.connectionList.keys)
+        largest_innovation_id = max(self.connectionList.keys())
 
         for g_id, genome in comparison_genome.connectionList.items():
             if not g_id in self.connectionList and g_id < largest_innovation_id:
                 disjoint_genes.append(genome)
 
         for g_id, genome in self.connectionList.items():
-            if not g_id in comparison_genome:
+            if not g_id in comparison_genome.connectionList.keys():
                 disjoint_genes.append(genome)
 
         return disjoint_genes      
 
     def get_avg_weight_difference(self, comparison_genome):
-        avg_weight_self = sum(c_gene.weight for c_gene in self.connectionList.values() / len(self.connectionList))
-        avg_weight_comp = sum(c_gene.weight for c_gene in comparison_genome.connectionList.values() / len(comparison_genome.connectionList))
+        avg_weight_self = sum(c_gene.weight for c_gene in self.connectionList.values()) / len(self.connectionList)
+        avg_weight_comp = sum(c_gene.weight for c_gene in comparison_genome.connectionList.values()) / len(comparison_genome.connectionList)
         return abs(avg_weight_self - avg_weight_comp)
 
     def is_compatible(self, comparison_genome):

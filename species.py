@@ -11,10 +11,7 @@ class Species():
         self.representative = genome 
 
         self.genomes = {i:genome.clone() for i in range(self.population_size)}
-
-        for i in range(self.population_size):
-            pass
-        
+     
         self.times_stagnated = 0
         self.active = True
         self.avg_max_fitness_achieved = 0
@@ -33,29 +30,32 @@ class Species():
 
 
     def generate_fitness(self):
-        pass
+        return 1
 
     def evolve(self):
         if self.active:
-            survivor_ids = self.select_survivor()
+            survivor_ids = self.get_survivors()
             self.create_next_generation(survivor_ids)
             self.generation_number += 1
             for genome in self.genomes.values():
-                genome.set_generaton(self.generation_number)
+                genome.set_generation(self.generation_number)
 
 
     def get_survivors(self):
         sorted_genomes_id = sorted(self.genomes, key=lambda k: self.genomes[k].fitness, reverse=True)
 
-        alive_genomes_id = sorted_genomes_id[:int(rount(float(self.population_size)/2.0))]
+        alive_genomes_id = sorted_genomes_id[:int(round(float(self.population_size)/2.0))]
         
         return alive_genomes_id
 
-    def crossover(parent1, parent2):
-        child = Genome()
+    
+    def crossover(self, genome1, genome2):
+        if genome1.fitness > genome2.fitness:
+            parent1, parent2 = genome1, genome2
+        else:
+            parent1, parent2 = genome2, genome1
 
-        for parent1Node in parent1.getNodeGenes().values():
-            child.addNodeGenes(parent1Node.copy())
+        child = parent1
 
         for parent1Connection in parent1.getConnectionGenes().values():
             if parent1Connection.innovation_number in parent2.getConnectionGenes(): 
@@ -114,20 +114,18 @@ class Species():
                 for genome in self.genomes.values():
                     pass #reinitialize genome
 
-        if (self.species_population < config.WEAK_SPECIES_THRESHOLD):
+        if (self.population_size < config.WEAK_SPECIES_THRESHOLD):
             self.active = False #Too weak to live
 
     
     def add_genome(self, genome):
-        genome.set_species(self.species_id)
-        genome.set_generaton(self.generation_number)
-        self.genome[self.species_population] = genome.clone()
-        self.species_population += 1
+        genome.set_species(self.id)
+        genome.set_generation(self.generation_number)
+        self.genomes[self.population_size] = genome.clone()
+        self.population_size += 1
 
     def delete_genome(self, genome_id):
-        self.genomes[genome_id] = self.genomes[self.species_population-1].clone()
-        del self.genomes[self.species_population-1]
-        self.species_population -= 1
+        self.genomes[genome_id] = self.genomes[self.population_size-1].clone()
+        del self.genomes[self.population_size-1]
+        self.population_size -= 1
 
-                
-    
