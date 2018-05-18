@@ -1,4 +1,31 @@
 from NEAT import NEAT
 
 neats = NEAT()
-neats.start_evolution()
+
+network = neats.species[0].genomes[0]
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.mutate()
+network.calculateOutput()
+

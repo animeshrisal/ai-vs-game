@@ -115,24 +115,26 @@ class Genome:
             self.connectionList.update({innovation_number : newConnection})
 
         if random.uniform(0, 1) < config.ADD_NODE_MUTATION:
-            randomValue = random.randint(1, len(self.connectionList) -1)
-            connection = self.connectionList[randomValue]
+            if(bool(self.connectionList) == True):
+                randomValue = random.randint(1, len(self.connectionList))
+                print(self.connectionList[randomValue])
+                connection = self.connectionList[randomValue]
 
-            if connection.enabled:
-                connection.disable()
+                if connection.enabled:
+                    connection.disable()
 
-                inNode = self.nodeList[connection.input_neuron.id]
-                outNode = self.nodeList[connection.output_neuron.id]
+                    inNode = self.nodeList[connection.input_neuron.id]
+                    outNode = self.nodeList[connection.output_neuron.id]
 
-                newNode = NodeGene(len(self.nodeList), 'hidden').clone()
-                innovation_number = self.innovation.getInnovation()
+                    newNode = NodeGene(len(self.nodeList), 'hidden').clone()
+                    innovation_number = self.innovation.getInnovation()
 
-                inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
-                newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True)
+                    inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
+                    newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True)
 
-                self.nodeList.update({newNode.id : newNode})
-                self.connectionList.update({inToNew.innovation_number : inToNew})
-                self.connectionList.update({newToOut.innovation_number : newToOut})
+                    self.nodeList.update({newNode.id : newNode})
+                    self.connectionList.update({inToNew.innovation_number : inToNew})
+                    self.connectionList.update({newToOut.innovation_number : newToOut})
 
     def clone(self):
         return deepcopy(self)
@@ -151,6 +153,7 @@ class Genome:
                     complete = False
 
                 print(x.id, x.has_fired(), x.inputValue)
+
 
         self.reset_nodes()
 

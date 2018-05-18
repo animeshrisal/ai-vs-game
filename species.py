@@ -30,7 +30,17 @@ class Species():
 
 
     def generate_fitness(self):
-        return 1
+        
+        input_values = [[1, 1], [1, 0], [0, 1], [0, 0]]
+        expected_output_values = [0,1,1,0]
+
+        neural_networks = self.genomes.values()
+        for neural_network in neural_networks:
+            for x in input_values:
+                neural_network.nodeList[0] = x[0]
+                neural_network.nodeList[1] = x[1]
+                neural_network.calculateOutput
+                
 
     def evolve(self):
         if self.active:

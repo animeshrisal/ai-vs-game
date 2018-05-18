@@ -10,7 +10,7 @@ class NodeGene:
         self.inputValue = inputValue
         self.inputGenes = inputGenes
         self.outputGenes = outputGenes
-        self.outputValue = 0.0
+        #self.outputValue = 0.0
         self.recieved_inputs = 0
         self.sent_output = False
         self.recieved_all_inputs = False
@@ -59,6 +59,7 @@ class NodeGene:
         self.sent_output = True
         for connectionGene in self.outputGenes.values():
             if connectionGene.enabled:
+                #connectionGene.output_neuron.addInput(self.inputValue * connectionGene.weight)
                 connectionGene.output_neuron.addInput(self.inputValue * connectionGene.weight)
             else:
                 connectionGene.output_neuron.addInput(0)
