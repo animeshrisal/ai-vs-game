@@ -37,7 +37,7 @@ class ConnectionGene:
         self.weight = rand.uniform(-2, 2)
 
     def clone(self):
-        return self
+        return deepcopy(self)
 
     def copy(self):
         return self
