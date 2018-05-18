@@ -111,7 +111,7 @@ class Genome:
                 return
 
             innovation_number = self.innovation.getInnovation()
-            newConnection = ConnectionGene(innovation_number, node2 if reverse else node1, node1 if reverse else node2, weight, True)
+            newConnection = ConnectionGene(innovation_number, node2 if reverse else node1, node1 if reverse else node2, weight, True).clone()
             self.connectionList.update({innovation_number : newConnection})
 
         if random.uniform(0, 1) < config.ADD_NODE_MUTATION:
@@ -129,8 +129,8 @@ class Genome:
                     newNode = NodeGene(len(self.nodeList), 'hidden').clone()
                     innovation_number = self.innovation.getInnovation()
 
-                    inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
-                    newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True)
+                    inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True).clone()
+                    newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True).clone()
 
                     self.nodeList.update({newNode.id : newNode})
                     self.connectionList.update({inToNew.innovation_number : inToNew})
