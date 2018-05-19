@@ -85,10 +85,10 @@ class Genome(object):
             if(node1.nodeType == 'hidden' and node2.nodeType == 'hidden'):
                 for input_genes in node1.inputGenes.values():
                     for output_genes in node2.outputGenes.values():
-                        if input_genes.input_neuron == output_genes.output_neuron:
+                        if input_genes.input_neuron.id == output_genes.output_neuron.id:
                             print('cycle forms')
                             connectionImpossible = True
-            
+                
 
             connectionExists = False
 
@@ -106,8 +106,9 @@ class Genome(object):
             else:
                 innovation_number = self.innovation.getInnovation()
                 newConnection = ConnectionGene(innovation_number, node1, node2, weight, True)
+                self.connectionList[newConnection.innovation_number] = newConnection
 
-            self.connectionList[newConnection.innovation_number] = newConnection
+            
         
         
         if random.uniform(0, 1) < config.ADD_NODE_MUTATION and len(self.nodeList) <= ( self.num_input_neurons + self.num_output_neurons + self.max_hidden_neurons):
@@ -144,7 +145,7 @@ class Genome(object):
         complete = False
         while not complete:
             counter += 1
-            if (counter > 200):
+            if (counter > 20):
                 print('Failed')
                 break
             complete = True
