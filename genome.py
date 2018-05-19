@@ -71,7 +71,7 @@ class Genome(object):
             connection.mutate_weight()
  
         
-        if 0 < config.ADD_GENE_MUTATION:
+        if random.uniform(0, 1) < config.ADD_GENE_MUTATION:
             node1 = random.choice(list(set().union(self.hiddenneurons, self.input_neurons)))
             node2 = random.choice(list(set().union(self.hiddenneurons, self.output_neurons)))
             weight = random.uniform(-1, 1)
@@ -86,9 +86,9 @@ class Genome(object):
                 for input_genes in node1.inputGenes.values():
                     for output_genes in node2.outputGenes.values():
                         if input_genes.input_neuron == output_genes.output_neuron:
+                            print('cycle forms')
                             connectionImpossible = True
             
-
 
             connectionExists = False
 
@@ -110,7 +110,7 @@ class Genome(object):
             self.connectionList[newConnection.innovation_number] = newConnection
         
         
-        if 0 < config.ADD_NODE_MUTATION and len(self.nodeList) <= ( self.num_input_neurons + self.num_output_neurons + self.max_hidden_neurons):
+        if random.uniform(0, 1) < config.ADD_NODE_MUTATION and len(self.nodeList) <= ( self.num_input_neurons + self.num_output_neurons + self.max_hidden_neurons):
             
             if(bool(self.connectionList) == True):
 
@@ -140,8 +140,13 @@ class Genome(object):
         return deepcopy(self)
 
     def calculateOutput(self):
+        counter = 0
         complete = False
         while not complete:
+            counter += 1
+            if (counter > 200):
+                print('Failed')
+                break
             complete = True
         
             for x in self.nodeList.values():
