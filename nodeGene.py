@@ -53,6 +53,8 @@ class NodeGene(object):
             if self.check_if_recieved():
                 self.activation()
         
+    def set_id(self, id):
+        self.id = id
     
     #The method where the passing of data from one neuron to next happens
     def fire(self):
@@ -68,7 +70,7 @@ class NodeGene(object):
         return deepcopy(self)
 
     def copy(self):
-        return self
+        return NodeGene(id = self.id, nodeType = self.nodeType, inputValue = self.inputValue, inputGenes = self.inputGenes, outputGenes = self.outputGenes  )
 
     def reset_neuron(self):
         self.outputValue = 0.0

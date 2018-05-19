@@ -40,6 +40,10 @@ class ConnectionGene:
         return copy.deepcopy(self)
 
     def copy(self):
-        return copy.copy(self)
+        return ConnectionGene(innovation_number = self.innovation_number, 
+        input_neuron = self.input_neuron, 
+        output_neuron = self.output_neuron, 
+        weight= self.weight,
+        enabled = self.enabled)
 
 
