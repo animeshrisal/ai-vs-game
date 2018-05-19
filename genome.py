@@ -47,9 +47,9 @@ class Genome(object):
         #Creating new connection genes
         for input_neuron in self.input_neurons:
             for output_neuron in self.output_neurons:
-                if random.uniform(0, 1) < config.RANDOM_THRESHOLD: #Dont want every input node to connect to all output nodes.
-                    innovation_number = self.innovation.getInnovation()
-                    self.connectionList[innovation_number] = ConnectionGene(innovation_number, input_neuron, output_neuron).clone()
+                #random.uniform(0, 1) < config.RANDOM_THRESHOLD: #Dont want every input node to connect to all output nodes.
+                innovation_number = self.innovation.getInnovation()
+                self.connectionList[innovation_number] = ConnectionGene(innovation_number, input_neuron, output_neuron).clone()
         
 
     ###Useful for testing
@@ -160,8 +160,25 @@ class Genome(object):
 
                 print(x.id, x.has_fired(), x.inputValue)
 
-
         self.reset_nodes()
+        return self.output_neurons[0]
+
+
+    def predict(self):
+        input_values = [[1, 1], [1, 0], [0, 1], [0, 0]]
+        expected_output_values = [0,1,1,0]
+        actual_value = [0,0,0,0]
+        counter = 0
+        for x in input_values:
+            self.nodeList[0].inputValue = x[0]
+            self.nodeList[1].inputValue = x[1]
+            value = self.calculateOutput()
+            if(expected_output_values[counter] == 0):
+                actual_value[counter] = 1 - self.output_neurons[0].inputValue
+            else:
+                actual_value[counter] = self.output_neurons[0].inputValue
+        
+        self.set_fitness(sum(actual_value)/4)
 
     def reset_nodes(self):
         for x in self.nodeList:
@@ -213,6 +230,7 @@ class Genome(object):
         return compatible   
         
     def set_fitness(self, fitness):
+        print(fitness)
         self.fitness = fitness
 
     def set_generation(self, generation_id):
