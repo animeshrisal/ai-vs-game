@@ -1,7 +1,7 @@
 import math
 from copy import deepcopy
 
-class NodeGene:
+class NodeGene(object):
 
     #Initializing neurons
     def __init__(self, id, nodeType, inputValue = 1, inputGenes = {}, outputGenes = {}):

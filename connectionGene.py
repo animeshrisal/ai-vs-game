@@ -1,5 +1,5 @@
 from nodeGene import NodeGene
-from copy import deepcopy
+import copy
 import random as rand
 import config
 
@@ -37,9 +37,9 @@ class ConnectionGene:
         self.weight = rand.uniform(-2, 2)
 
     def clone(self):
-        return deepcopy(self)
+        return copy.deepcopy(self)
 
     def copy(self):
-        return self
+        return copy.copy(self)
 
 

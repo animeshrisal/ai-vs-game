@@ -2,7 +2,7 @@ from genome import Genome
 import random
 import config
 
-class Species():
+class Species(object):
 
     def __init__(self, id, population_size, genome):
         self.id = id

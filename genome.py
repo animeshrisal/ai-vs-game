@@ -4,7 +4,7 @@ import random
 import config
 from copy import deepcopy
 
-class Genome:
+class Genome(object):
 
     def __init__(self, topology, innovation):
         
@@ -111,10 +111,11 @@ class Genome:
                 return
 
             innovation_number = self.innovation.getInnovation()
-            newConnection = ConnectionGene(innovation_number, node2 if reverse else node1, node1 if reverse else node2, weight, True).clone()
-            self.connectionList.update({innovation_number : newConnection})
+            newConnection = ConnectionGene(innovation_number, node2 if reverse else node1, node1 if reverse else node2, weight, True).copy()
+            self.connectionList[newConnection.innovation_number] = newConnection
 
         if random.uniform(0, 1) < config.ADD_NODE_MUTATION:
+            
             if(bool(self.connectionList) == True):
                 randomValue = random.randint(1, len(self.connectionList))
                 print(self.connectionList[randomValue])
@@ -128,13 +129,26 @@ class Genome:
 
                     newNode = NodeGene(len(self.nodeList), 'hidden').clone()
                     innovation_number = self.innovation.getInnovation()
-
                     inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True).clone()
+                    innovation_number = self.innovation.getInnovation()
                     newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True).clone()
 
                     self.nodeList.update({newNode.id : newNode})
                     self.connectionList.update({inToNew.innovation_number : inToNew})
                     self.connectionList.update({newToOut.innovation_number : newToOut})
+            
+
+        if random.uniform(0, 1) < config.ADD_NODE_MUTATION:
+            if(bool(self.connectionList) == True):
+                randomValue = random.randint(1, len(self.connectionList))
+                connection = self.connectionList[randomValue]
+
+                if connection.enabled:
+                    connection.disable()
+
+                    newNode = NodeGene(len(self.nodeList), 'hidden').copy()
+
+
 
     def clone(self):
         return deepcopy(self)
