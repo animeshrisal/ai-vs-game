@@ -3,6 +3,7 @@ from nodeGene import NodeGene
 import random
 import config
 from copy import deepcopy
+import time
 
 class Genome(object):
 
@@ -21,6 +22,8 @@ class Genome(object):
         self.nodeList = {}
         self.connectionList = {}
         self.hiddenneurons = []
+
+        self.max_hidden_neurons = 10
 
 
         #Creating input neurons
@@ -67,6 +70,7 @@ class Genome(object):
         for connection in self.connectionList.values():
             connection.mutate_weight()
  
+        
         if 0 < config.ADD_GENE_MUTATION:
             node1 = random.choice(list(set().union(self.hiddenneurons, self.input_neurons)))
             node2 = random.choice(list(set().union(self.hiddenneurons, self.output_neurons)))
@@ -76,9 +80,15 @@ class Genome(object):
             
             if(node1.id == node2.id):
                 connectionImpossible = True
+
             
-            elif (node1.nodeType == 'hidden' and node2.nodeType == 'hidden'):
-                connectionImpossible = True
+            if(node1.nodeType == 'hidden' and node2.nodeType == 'hidden'):
+                for input_genes in node1.inputGenes.values():
+                    for output_genes in node2.outputGenes.values():
+                        if input_genes.input_neuron == output_genes.output_neuron:
+                            connectionImpossible = True
+            
+
 
             connectionExists = False
 
@@ -93,17 +103,18 @@ class Genome(object):
 
             if(connectionExists or connectionImpossible):
                 return
+            else:
+                innovation_number = self.innovation.getInnovation()
+                newConnection = ConnectionGene(innovation_number, node1, node2, weight, True)
 
-            innovation_number = self.innovation.getInnovation()
-            newConnection = ConnectionGene(innovation_number, node1, node2, weight, True)
-            self.connectionList[newConnection.innovation_number] = newConnection.copy()
-
-        if 0 < config.ADD_NODE_MUTATION:
+            self.connectionList[newConnection.innovation_number] = newConnection
+        
+        
+        if 0 < config.ADD_NODE_MUTATION and len(self.nodeList) <= ( self.num_input_neurons + self.num_output_neurons + self.max_hidden_neurons):
             
             if(bool(self.connectionList) == True):
-                randomValue = random.randint(1, len(self.connectionList))
 
-                connection = self.connectionList[randomValue]
+                connection = random.choice(list(self.connectionList.values()))
 
                 if connection.enabled:
                     connection.disable()
@@ -111,35 +122,30 @@ class Genome(object):
                     inNode = self.nodeList[connection.input_neuron.id]
                     outNode = self.nodeList[connection.output_neuron.id]
                     
-                    newNode = NodeGene(connection.output_neuron.id, "hidden").clone()
-                    connection.output_neuron.set_id(self.get_next_neuron_id())
+                    newNode = NodeGene(self.get_next_neuron_id(), "hidden").clone()
+                    
                     innovation_number = self.innovation.getInnovation()
                     inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True).clone()
                     innovation_number = self.innovation.getInnovation()
                     newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True).clone()
 
                     
-                    self.nodeList.update({newNode.id : newNode})
-                    self.nodeList.update({connection.output_neuron.id : connection.output_neuron})
-                    self.connectionList.update({inToNew.innovation_number : inToNew})
-                    self.connectionList.update({newToOut.innovation_number : newToOut})
+                    self.nodeList[newNode.id] = newNode
+                    self.connectionList[inToNew.innovation_number] = inToNew
+                    self.connectionList[newToOut.innovation_number] = newToOut
                     
                     self.hiddenneurons.append(newNode)
             
-
-
-
-
     def clone(self):
         return deepcopy(self)
-
 
     def calculateOutput(self):
         complete = False
         while not complete:
             complete = True
+        
             for x in self.nodeList.values():
-                print(x.id , ' ',len(x.inputGenes), ' ', len(x.outputGenes), ' ', x.recieved_inputs)
+                print(x.id , ' ',len(x.inputGenes), ' ', len(x.outputGenes), ' ', x.recieved_inputs, ' ', x.nodeType)
                 if x.ready():
                     x.fire()
 
