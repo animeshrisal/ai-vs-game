@@ -111,7 +111,8 @@ class Genome(object):
                     inNode = self.nodeList[connection.input_neuron.id]
                     outNode = self.nodeList[connection.output_neuron.id]
                     
-                    newNode = NodeGene(self.get_next_neuron_id(), "hidden").clone()
+                    newNode = NodeGene(connection.output_neuron.id, "hidden").clone()
+                    connection.output_neuron.set_id(self.get_next_neuron_id())
                     innovation_number = self.innovation.getInnovation()
                     inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True).clone()
                     innovation_number = self.innovation.getInnovation()
@@ -119,6 +120,7 @@ class Genome(object):
 
                     
                     self.nodeList.update({newNode.id : newNode})
+                    self.nodeList.update({connection.output_neuron.id : connection.output_neuron})
                     self.connectionList.update({inToNew.innovation_number : inToNew})
                     self.connectionList.update({newToOut.innovation_number : newToOut})
                     
