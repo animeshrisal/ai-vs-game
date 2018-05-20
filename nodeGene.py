@@ -4,7 +4,7 @@ from copy import deepcopy
 class NodeGene(object):
 
     #Initializing neurons
-    def __init__(self, id, nodeType, inputValue = 1, inputGenes = {}, outputGenes = {}):
+    def __init__(self, id, nodeType, layer, inputValue = 1, inputGenes = {}, outputGenes = {}):
         self.id = id
         self.nodeType = nodeType
         self.inputValue = inputValue
@@ -14,6 +14,7 @@ class NodeGene(object):
         self.recieved_inputs = 0
         self.sent_output = False
         self.recieved_all_inputs = False
+        self.layer = layer
 
     def expected_inputs(self):
         if self.nodeType == 'input':

@@ -31,7 +31,7 @@ class Genome(object):
         self.input_neurons = []
         while i < self.num_input_neurons:
             new_neuron_id = self.get_next_neuron_id()
-            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'input').clone()
+            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'input', 0).clone()
             self.input_neurons.append(self.nodeList[new_neuron_id])
             i += 1
    
@@ -40,7 +40,7 @@ class Genome(object):
         self.output_neurons = []
         while i < self.num_output_neurons:
             new_neuron_id = self.get_next_neuron_id()
-            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'output').clone()
+            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'output', 11).clone()
             self.output_neurons.append(self.nodeList[new_neuron_id])
             i += 1
 
@@ -83,11 +83,8 @@ class Genome(object):
 
             
             if(node1.nodeType == 'hidden' and node2.nodeType == 'hidden'):
-                for input_genes in node1.inputGenes.values():
-                    for output_genes in node2.outputGenes.values():
-                        if input_genes.input_neuron.id == output_genes.output_neuron.id:
-                            print('cycle forms')
-                            connectionImpossible = True
+                if(node2.layer <= node1.layer):
+                    connectionImpossible = True
                 
 
             connectionExists = False
@@ -123,7 +120,7 @@ class Genome(object):
                     inNode = self.nodeList[connection.input_neuron.id]
                     outNode = self.nodeList[connection.output_neuron.id]
                     
-                    newNode = NodeGene(self.get_next_neuron_id(), "hidden").clone()
+                    newNode = NodeGene(self.get_next_neuron_id(), "hidden", random.randint(inNode.layer, outNode.layer)).clone()
                     
                     innovation_number = self.innovation.getInnovation()
                     inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True).clone()
@@ -147,6 +144,7 @@ class Genome(object):
             counter += 1
             if (counter > 20):
                 print('Failed')
+                self.output_neurons[0] = 0
                 break
             complete = True
         

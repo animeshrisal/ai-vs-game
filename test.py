@@ -2,35 +2,11 @@ from NEAT import NEAT
 
 neats = NEAT()
 
-neats.start_evolution()
+network = neats.species[0].genomes[0]
 
-for i_id in neats.species:
-    neats.species[i_id].generate_fitness()
+for x in range(1000):
+    network.mutate()
 
-neats.start_evolution()
-
-for i_id in neats.species:
-    neats.species[i_id].generate_fitness()
-
-neats.start_evolution()
-
-for i_id in neats.species:
-    neats.species[i_id].generate_fitness()
-
-neats.start_evolution()
-
-for i_id in neats.species:
-    neats.species[i_id].generate_fitness()
-
-neats.start_evolution()
-
-for i_id in neats.species:
-    neats.species[i_id].generate_fitness()
-
-    
-
-for i_id in neats.species:
-    print(neats.species[i_id].avg_max_fitness_achieved)
-
+network.calculateOutput()
 
 
