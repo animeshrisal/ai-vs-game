@@ -20,14 +20,12 @@ class Species():
     def run_generation(self):
         if self.active:
             species_fitness = self.generate_fitness()
-
             avg_species_fitness = float(species_fitness)/float(self.population_size)
             self.culling(avg_species_fitness)
             return avg_species_fitness if self.active else None
 
         else:
             return None 
-
 
     def generate_fitness(self):
         return 1

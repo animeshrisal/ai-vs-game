@@ -27,7 +27,7 @@ class Genome:
         self.input_neurons = []
         while i < self.num_input_neurons:
             new_neuron_id = self.get_next_neuron_id()
-            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, "input").clone()
+            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, "input", 0)
             self.input_neurons.append(self.nodeList[new_neuron_id])
             i += 1
    
@@ -37,7 +37,7 @@ class Genome:
         self.output_neurons = []
         while i < self.num_output_neurons:
             new_neuron_id = self.get_next_neuron_id()
-            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, "output").clone()
+            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, "output", 0)
             self.output_neurons.append(self.nodeList[new_neuron_id])
             i += 1
 
@@ -58,10 +58,10 @@ class Genome:
         return self.connectionList
 
     def addNodeGenes(self, node):
-        self.nodeList.update({node.id: node.clone()})
+        self.nodeList.update({node.id: node})
 
     def addConnectionGenes(self, conn):
-        self.connectionList.update({conn.innovation_number: conn.clone()})
+        self.connectionList.update({conn.innovation_number: conn})
 
     ###
     def mutate(self):
@@ -124,7 +124,7 @@ class Genome:
                 inNode = self.nodeList[connection.input_neuron.id]
                 outNode = self.nodeList[connection.output_neuron.id]
 
-                newNode = NodeGene(len(self.nodeList), 'hidden').clone()
+                newNode = NodeGene(len(self.nodeList), 'hidden')
                 innovation_number = self.innovation.getInnovation()
 
                 inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
