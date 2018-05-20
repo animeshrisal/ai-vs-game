@@ -145,14 +145,11 @@ class Genome(object):
             complete = True
         
             for x in self.nodeList.values():
-                print(x.id , ' ',len(x.inputGenes), ' ', len(x.outputGenes), ' ', x.recieved_inputs, ' ', x.nodeType)
                 if x.ready():
                     x.fire()
 
                 if not x.has_fired():
                     complete = False
-
-                print(x.id, x.has_fired(), x.inputValue)
 
         self.reset_nodes()
         return self.output_neurons[0]
