@@ -5,7 +5,7 @@ import config
 
 
 
-class ConnectionGene:
+class ConnectionGene(object):
     
     def __init__(self, innovation_number, input_neuron, output_neuron, weight=None, enabled = True):
         self.innovation_number = innovation_number

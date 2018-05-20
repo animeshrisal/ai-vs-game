@@ -4,12 +4,12 @@ from copy import deepcopy
 class NodeGene(object):
 
     #Initializing neurons
-    def __init__(self, id, nodeType, layer, inputValue = 1, inputGenes = {}, outputGenes = {}):
+    def __init__(self, id, nodeType, layer, inputValue = 1):
         self.id = id
         self.nodeType = nodeType
         self.inputValue = inputValue
-        self.inputGenes = inputGenes
-        self.outputGenes = outputGenes
+        self.inputGenes = {}
+        self.outputGenes = {}
         #self.outputValue = 0.0
         self.recieved_inputs = 0
         self.sent_output = False

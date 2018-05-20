@@ -31,7 +31,7 @@ class Genome(object):
         self.input_neurons = []
         while i < self.num_input_neurons:
             new_neuron_id = self.get_next_neuron_id()
-            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'input', 0).clone()
+            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'input', 0)
             self.input_neurons.append(self.nodeList[new_neuron_id])
             i += 1
    
@@ -40,7 +40,7 @@ class Genome(object):
         self.output_neurons = []
         while i < self.num_output_neurons:
             new_neuron_id = self.get_next_neuron_id()
-            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'output', 11).clone()
+            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'output', 11)
             self.output_neurons.append(self.nodeList[new_neuron_id])
             i += 1
 
@@ -49,7 +49,7 @@ class Genome(object):
             for output_neuron in self.output_neurons:
                 #random.uniform(0, 1) < config.RANDOM_THRESHOLD: #Dont want every input node to connect to all output nodes.
                 innovation_number = self.innovation.getInnovation()
-                self.connectionList[innovation_number] = ConnectionGene(innovation_number, input_neuron, output_neuron).clone()
+                self.connectionList[innovation_number] = ConnectionGene(innovation_number, input_neuron, output_neuron)
         
 
     ###Useful for testing
@@ -83,7 +83,7 @@ class Genome(object):
 
             
             if(node1.nodeType == 'hidden' and node2.nodeType == 'hidden'):
-                if(node2.layer < node1.layer):
+                if(node2.layer <= node1.layer):
                     connectionImpossible = True
                 
 
@@ -120,12 +120,12 @@ class Genome(object):
                     inNode = self.nodeList[connection.input_neuron.id]
                     outNode = self.nodeList[connection.output_neuron.id]
                     
-                    newNode = NodeGene(self.get_next_neuron_id(), "hidden", random.randint(inNode.layer, outNode.layer)).clone()
+                    newNode = NodeGene(self.get_next_neuron_id(), "hidden", random.randint(inNode.layer, outNode.layer))
                     
                     innovation_number = self.innovation.getInnovation()
-                    inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True).clone()
+                    inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
                     innovation_number = self.innovation.getInnovation()
-                    newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True).clone()
+                    newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True)
 
                     
                     self.nodeList[newNode.id] = newNode
@@ -145,14 +145,14 @@ class Genome(object):
             complete = True
         
             for x in self.nodeList.values():
-                #print(x.id , ' ',len(x.inputGenes), ' ', len(x.outputGenes), ' ', x.recieved_inputs, ' ', x.nodeType)
+                print(x.id , ' ',len(x.inputGenes), ' ', len(x.outputGenes), ' ', x.recieved_inputs, ' ', x.nodeType)
                 if x.ready():
                     x.fire()
 
                 if not x.has_fired():
                     complete = False
 
-                #print(x.id, x.has_fired(), x.inputValue)
+                print(x.id, x.has_fired(), x.inputValue)
 
         self.reset_nodes()
         return self.output_neurons[0]
