@@ -70,12 +70,9 @@ class NodeGene(object):
     def clone(self):
         return deepcopy(self)
 
-<<<<<<< HEAD
-=======
     def copy(self):
         return NodeGene(id = self.id, nodeType = self.nodeType, inputValue = self.inputValue, inputGenes = self.inputGenes, outputGenes = self.outputGenes  )
 
->>>>>>> xor
     def reset_neuron(self):
         self.outputValue = 0.0
         self.recieved_inputs = 0
