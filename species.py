@@ -2,7 +2,7 @@ from genome import Genome
 import random
 import config
 
-class Species():
+class Species(object):
 
     def __init__(self, id, population_size, genome):
         self.id = id
@@ -28,7 +28,13 @@ class Species():
             return None 
 
     def generate_fitness(self):
-        return 1
+        score = 0
+        neural_networks = self.genomes.values()
+        for x in neural_networks:
+            x.predict()
+
+            score += x.fitness
+        return score
 
     def evolve(self):
         if self.active:
@@ -41,9 +47,7 @@ class Species():
 
     def get_survivors(self):
         sorted_genomes_id = sorted(self.genomes, key=lambda k: self.genomes[k].fitness, reverse=True)
-
         alive_genomes_id = sorted_genomes_id[:int(round(float(self.population_size)/2.0))]
-        
         return alive_genomes_id
 
     
@@ -78,6 +82,7 @@ class Species():
 
             if random.uniform(0, 1) > config.CROSSOVER_CHANCE:
                 genomes[genome_id] = random_genome
+                
 
             else:
                 genomes[genome_id] = self.crossover(random_genome, random_genome_mate)

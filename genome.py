@@ -3,8 +3,9 @@ from nodeGene import NodeGene
 import random
 import config
 from copy import deepcopy
+import time
 
-class Genome:
+class Genome(object):
 
     def __init__(self, topology, innovation):
         
@@ -20,6 +21,9 @@ class Genome:
 
         self.nodeList = {}
         self.connectionList = {}
+        self.hiddenneurons = []
+
+        self.max_hidden_neurons = 10
 
 
         #Creating input neurons
@@ -27,27 +31,26 @@ class Genome:
         self.input_neurons = []
         while i < self.num_input_neurons:
             new_neuron_id = self.get_next_neuron_id()
-            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, "input", 0)
+
+            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'input', 0)
             self.input_neurons.append(self.nodeList[new_neuron_id])
             i += 1
    
-    
         #Creating output neurons
         i = 0
         self.output_neurons = []
         while i < self.num_output_neurons:
             new_neuron_id = self.get_next_neuron_id()
-            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, "output", 0)
+            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'output', 11)
             self.output_neurons.append(self.nodeList[new_neuron_id])
             i += 1
 
-    
         #Creating new connection genes
         for input_neuron in self.input_neurons:
             for output_neuron in self.output_neurons:
-                if random.uniform(0, 1) < config.RANDOM_THRESHOLD: #Dont want every input node to connect to all output nodes.
-                    innovation_number = self.innovation.getInnovation()
-                    self.connectionList[innovation_number] = ConnectionGene(innovation_number, input_neuron, output_neuron)
+                #random.uniform(0, 1) < config.RANDOM_THRESHOLD: #Dont want every input node to connect to all output nodes.
+                innovation_number = self.innovation.getInnovation()
+                self.connectionList[innovation_number] = ConnectionGene(innovation_number, input_neuron, output_neuron)
         
 
     ###Useful for testing
@@ -67,34 +70,23 @@ class Genome:
     def mutate(self):
         for connection in self.connectionList.values():
             connection.mutate_weight()
-            
+ 
+        
         if random.uniform(0, 1) < config.ADD_GENE_MUTATION:
-
-            node1 = self.nodeList[random.randint(1, len(self.nodeList) - 1)]
-            node2 = self.nodeList[random.randint(1, len(self.nodeList) - 1)]
+            node1 = random.choice(list(set().union(self.hiddenneurons, self.input_neurons)))
+            node2 = random.choice(list(set().union(self.hiddenneurons, self.output_neurons)))
             weight = random.uniform(-1, 1)
 
-            reverse = False
-
-            if(node1.nodeType == 'hidden' and node2.nodeType == 'input'):
-                reverse = True 
-
-            if(node1.nodeType == 'output' and node2.nodeType == 'hidden'):
-                reverse = True
-
-            if(node1.nodeType == 'output' and node2.nodeType == 'input'):
-                reverse = True
-
             connectionImpossible = False
-
-            if(node1.nodeType == 'input' and node2.nodeType == 'input'):
-                connectionImpossible = True        
-
-            if(node1.nodeType == 'output' and node2.nodeType == 'output'):
-                connectionImpossible = True 
-
+            
             if(node1.id == node2.id):
                 connectionImpossible = True
+
+            
+            if(node1.nodeType == 'hidden' and node2.nodeType == 'hidden'):
+                if(node2.layer <= node1.layer):
+                    connectionImpossible = True
+                
 
             connectionExists = False
 
@@ -110,49 +102,81 @@ class Genome:
             if(connectionExists or connectionImpossible):
                 return
 
-            innovation_number = self.innovation.getInnovation()
-            newConnection = ConnectionGene(innovation_number, node2 if reverse else node1, node1 if reverse else node2, weight, True)
-            self.connectionList.update({innovation_number : newConnection})
+            else:
 
-        if random.uniform(0, 1) < config.ADD_NODE_MUTATION:
-            randomValue = random.randint(1, len(self.connectionList) -1)
-            connection = self.connectionList[randomValue]
-
-            if connection.enabled:
-                connection.disable()
-
-                inNode = self.nodeList[connection.input_neuron.id]
-                outNode = self.nodeList[connection.output_neuron.id]
-
-                newNode = NodeGene(len(self.nodeList), 'hidden')
                 innovation_number = self.innovation.getInnovation()
+                newConnection = ConnectionGene(innovation_number, node1, node2, weight, True)
+                self.connectionList[newConnection.innovation_number] = newConnection
 
-                inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
-                newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True)
+            
+        
+        
+        if random.uniform(0, 1) < config.ADD_NODE_MUTATION and len(self.nodeList) <= ( self.num_input_neurons + self.num_output_neurons + self.max_hidden_neurons):
+            
+            if(bool(self.connectionList) == True):
 
-                self.nodeList.update({newNode.id : newNode})
-                self.connectionList.update({inToNew.innovation_number : inToNew})
-                self.connectionList.update({newToOut.innovation_number : newToOut})
+                connection = random.choice(list(self.connectionList.values()))
 
+                if connection.enabled:
+                    connection.disable()
+
+                    inNode = self.nodeList[connection.input_neuron.id]
+                    outNode = self.nodeList[connection.output_neuron.id]
+                    
+                    newNode = NodeGene(self.get_next_neuron_id(), "hidden", random.randint(inNode.layer, outNode.layer))
+                    
+                    innovation_number = self.innovation.getInnovation()
+                    inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
+                    innovation_number = self.innovation.getInnovation()
+                    newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True)
+
+                    
+                    self.nodeList[newNode.id] = newNode
+                    self.connectionList[inToNew.innovation_number] = inToNew
+                    self.connectionList[newToOut.innovation_number] = newToOut
+                    
+                    self.hiddenneurons.append(newNode)
+            
     def clone(self):
         return deepcopy(self)
 
-
     def calculateOutput(self):
+        counter = 0
         complete = False
         while not complete:
+
             complete = True
+        
             for x in self.nodeList.values():
-                print(x.id , ' ',len(x.inputGenes), ' ', len(x.outputGenes), ' ', x.recieved_inputs)
                 if x.ready():
                     x.fire()
 
                 if not x.has_fired():
                     complete = False
 
-                print(x.id, x.has_fired(), x.inputValue)
-
         self.reset_nodes()
+        return self.output_neurons[0]
+
+
+    def predict(self):
+        input_values = [[1, 1], [1, 0], [0, 1], [0, 0]]
+        expected_output_values = [0,1,1,0]
+        actual_value = [0,0,0,0]
+        counter = 0
+        for x in input_values:
+            self.nodeList[0].inputValue = x[0]
+            self.nodeList[1].inputValue = x[1]
+            value = self.calculateOutput()
+            if(expected_output_values[counter] == 0):
+                actual_value[counter] = 1 - self.output_neurons[0].inputValue
+            else:
+                actual_value[counter] = self.output_neurons[0].inputValue
+        
+            
+            print("Input 1: ", x[0], "Input 2: ", x[1], "Expected Output:", expected_output_values[counter] , "Actual Output: ", value.inputValue)
+            counter += 1
+        
+        self.set_fitness(sum(actual_value)/4)
 
     def reset_nodes(self):
         for x in self.nodeList:
@@ -204,6 +228,7 @@ class Genome:
         return compatible   
         
     def set_fitness(self, fitness):
+
         self.fitness = fitness
 
     def set_generation(self, generation_id):

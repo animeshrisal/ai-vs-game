@@ -7,37 +7,29 @@ class NEAT(object):
 
     def __init__(self):
 
-        self.population = 50
+        self.population = 40
         self.initial_topology = (2, 1) 
-
         self.species_number = 0
         self.species = {}
-
         self.population_fitness = 0
-
         self.innovation = Innovation()
-
         initial_genome = Genome(self.initial_topology, self.innovation)
         self.create_new_species(initial_genome, self.population)
-
-
     
     def start_evolution(self):
-        while True:
+        avg_fitness_scores = {}
 
-            avg_fitness_scores = {}
+        for individual_species_id, individual_species in self.species.items():
+            avg_fitness = individual_species.run_generation()
 
-            for individual_species_id, individual_species in self.species.items():
-                avg_fitness = individual_species.run_generation()
+            if avg_fitness != None:
+                avg_fitness_scores[individual_species_id] = avg_fitness
 
-                if avg_fitness != None:
-                    avg_fitness_scores[individual_species_id] = avg_fitness
+        for individual_species_id, individual_species in self.species.items():
+            individual_species.evolve()
 
-            for individual_species_id, individual_species in self.species.items():
-                individual_species.evolve()
-
-            if config.SPECIATION:
-                self.perform_speciation() 
+        if config.SPECIATION:
+            self.perform_speciation() 
 
 
     def create_new_species(self, initial_genome, population):

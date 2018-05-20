@@ -1,11 +1,11 @@
 from nodeGene import NodeGene
-from copy import deepcopy
+import copy
 import random as rand
 import config
 
 
 
-class ConnectionGene:
+class ConnectionGene(object):
     
     def __init__(self, innovation_number, input_neuron, output_neuron, weight=None, enabled = True):
         self.innovation_number = innovation_number
@@ -37,9 +37,13 @@ class ConnectionGene:
         self.weight = rand.uniform(-2, 2)
 
     def clone(self):
-        return self
+        return copy.deepcopy(self)
 
     def copy(self):
-        return self
+        return ConnectionGene(innovation_number = self.innovation_number, 
+        input_neuron = self.input_neuron, 
+        output_neuron = self.output_neuron, 
+        weight= self.weight,
+        enabled = self.enabled)
 
 
