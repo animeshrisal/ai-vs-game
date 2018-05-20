@@ -7,7 +7,7 @@ class NEAT(object):
 
     def __init__(self):
 
-        self.population = 50
+        self.population = 40
         self.initial_topology = (2, 1) 
         self.species_number = 0
         self.species = {}
@@ -15,8 +15,6 @@ class NEAT(object):
         self.innovation = Innovation()
         initial_genome = Genome(self.initial_topology, self.innovation)
         self.create_new_species(initial_genome, self.population)
-
-
     
     def start_evolution(self):
         avg_fitness_scores = {}

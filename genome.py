@@ -83,7 +83,7 @@ class Genome(object):
 
             
             if(node1.nodeType == 'hidden' and node2.nodeType == 'hidden'):
-                if(node2.layer <= node1.layer):
+                if(node2.layer < node1.layer):
                     connectionImpossible = True
                 
 
@@ -141,22 +141,18 @@ class Genome(object):
         counter = 0
         complete = False
         while not complete:
-            counter += 1
-            if (counter > 20):
-                print('Failed')
-                self.output_neurons[0] = 0
-                break
+
             complete = True
         
             for x in self.nodeList.values():
-                print(x.id , ' ',len(x.inputGenes), ' ', len(x.outputGenes), ' ', x.recieved_inputs, ' ', x.nodeType)
+                #print(x.id , ' ',len(x.inputGenes), ' ', len(x.outputGenes), ' ', x.recieved_inputs, ' ', x.nodeType)
                 if x.ready():
                     x.fire()
 
                 if not x.has_fired():
                     complete = False
 
-                print(x.id, x.has_fired(), x.inputValue)
+                #print(x.id, x.has_fired(), x.inputValue)
 
         self.reset_nodes()
         return self.output_neurons[0]
@@ -175,6 +171,10 @@ class Genome(object):
                 actual_value[counter] = 1 - self.output_neurons[0].inputValue
             else:
                 actual_value[counter] = self.output_neurons[0].inputValue
+        
+            
+            print("Input 1: ", x[0], "Input 2: ", x[1], "Expected Output:", expected_output_values[counter] , "Actual Output: ", value.inputValue)
+            counter += 1
         
         self.set_fitness(sum(actual_value)/4)
 
@@ -228,7 +228,7 @@ class Genome(object):
         return compatible   
         
     def set_fitness(self, fitness):
-        print(fitness)
+
         self.fitness = fitness
 
     def set_generation(self, generation_id):
