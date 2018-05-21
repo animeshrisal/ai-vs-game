@@ -1,12 +1,18 @@
 from NEAT import NEAT
 import sys
 import pickle
+import os.path
 
 
 # Driver for NEAT solution to FlapPyBird
 def evolutionary_driver():
-	#solver = NEAT()
-	solver = pickle.load(open("./save.p", "rb"))
+	
+	if not os.path.isfile('save.p'):
+		solver = NEAT()
+	else:
+		solver = pickle.load(open("./save.p", "rb"))
+	 
+	print('a')
 	while True:
 		solver.start_evolution()
 		pickle.dump(solver, open("./save.p", "wb"))
