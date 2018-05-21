@@ -4,6 +4,7 @@ import random
 import config
 from copy import deepcopy
 import time
+from sklearn import preprocessing
 
 class Genome(object):
 
@@ -23,7 +24,7 @@ class Genome(object):
         self.connectionList = {}
         self.hiddenneurons = []
 
-        self.max_hidden_neurons = 10
+        self.max_hidden_neurons = 50
 
 
         #Creating input neurons
@@ -81,7 +82,6 @@ class Genome(object):
             
             if(node1.id == node2.id):
                 connectionImpossible = True
-
             
             if(node1.nodeType == 'hidden' and node2.nodeType == 'hidden'):
                 if(node2.layer <= node1.layer):
@@ -140,13 +140,18 @@ class Genome(object):
     def clone(self):
         return deepcopy(self)
 
-    def calculateOutput(self):
-        counter = 0
+    def calculateOutput(self, X):
+
+        X = preprocessing.scale(X)
+        
+        for i, input_value in enumerate(X):
+            self.input_neurons[i].addInput(input_value)
+        
         complete = False
         while not complete:
 
             complete = True
-        
+
             for x in self.nodeList.values():
                 if x.ready():
                     x.fire()
@@ -154,29 +159,10 @@ class Genome(object):
                 if not x.has_fired():
                     complete = False
 
+        output_neuron = self.output_neurons[0]
+        value = output_neuron.activation()
         self.reset_nodes()
-        return self.output_neurons[0]
-
-
-    def predict(self):
-        input_values = [[1, 1], [1, 0], [0, 1], [0, 0]]
-        expected_output_values = [0,1,1,0]
-        actual_value = [0,0,0,0]
-        counter = 0
-        for x in input_values:
-            self.nodeList[0].inputValue = x[0]
-            self.nodeList[1].inputValue = x[1]
-            value = self.calculateOutput()
-            if(expected_output_values[counter] == 0):
-                actual_value[counter] = 1 - self.output_neurons[0].inputValue
-            else:
-                actual_value[counter] = self.output_neurons[0].inputValue
-        
-            
-            print("Input 1: ", x[0], "Input 2: ", x[1], "Expected Output:", expected_output_values[counter] , "Actual Output: ", value.inputValue)
-            counter += 1
-        
-        self.set_fitness(sum(actual_value)/4)
+        return True if value >= config.ACTIVATION_THRESHOLD else False
 
     def reset_nodes(self):
         for x in self.nodeList:

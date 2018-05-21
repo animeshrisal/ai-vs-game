@@ -4,9 +4,9 @@ neats = NEAT()
 
 network = neats.species[0].genomes[0]
 
-for x in range(2000):
+for x in range(1000):
     network.mutate()
-    
-network.predict()
+
+network.calculateOutput()
 
 

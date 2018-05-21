@@ -8,7 +8,7 @@ class NEAT(object):
     def __init__(self):
 
         self.population = 40
-        self.initial_topology = (2, 1) 
+        self.initial_topology = (10, 1) 
         self.species_number = 0
         self.species = {}
         self.population_fitness = 0

@@ -1,6 +1,11 @@
 from genome import Genome
 import random
 import config
+import numpy as np
+from scipy.stats import expon
+import FlapPyBird.flappy as flpy
+import os
+os.chdir(os.getcwd() + '/FlapPyBird/')
 
 class Species(object):
 
@@ -20,7 +25,7 @@ class Species(object):
     def run_generation(self):
         if self.active:
             species_fitness = self.generate_fitness()
-            avg_species_fitness = float(species_fitness)/float(self.population_size)
+            avg_species_fitness = float(species_fitness)/float(self.population_size+1)
             self.culling(avg_species_fitness)
             return avg_species_fitness if self.active else None
 
@@ -28,13 +33,37 @@ class Species(object):
             return None 
 
     def generate_fitness(self):
-        score = 0
-        neural_networks = self.genomes.values()
-        for x in neural_networks:
-            x.predict()
+        species_score = 0
 
-            score += x.fitness
-        return score
+        neural_networks = self.genomes.values()
+
+        app = flpy.FlappyBirdApp(neural_networks)
+        app.play()
+        results = app.crash_info
+
+        for crash_info in results:
+
+            distance_from_pipes = 0
+            if (crash_info['y'] < crash_info['upperPipes'][0]['y']):
+                distance_from_pipes = abs(crash_info['y'] - crash_info['upperPipes'][0]['y'])       
+            elif (crash_info['y'] > crash_info['upperPipes'][0]['y']):      
+                distance_from_pipes = abs(crash_info['y'] - crash_info['lowerPipes'][0]['y'])       
+
+            fitness_score = ((crash_info['score'] * 1000)       
+                              + (crash_info['distance'])        
+                              - (distance_from_pipes * 3)       
+                              - (1.5 * crash_info['energy']))
+
+            # Should experiment with this more.
+            # fitness_score = ((crash_info['distance'])
+            #                  - (1.5 * crash_info['energy']))
+
+            neural_networks[crash_info['network_id']].set_fitness(fitness_score)
+            species_score += fitness_score
+
+        print "\nSpecies Score:", species_score
+
+        return species_score
 
     def evolve(self):
         if self.active:

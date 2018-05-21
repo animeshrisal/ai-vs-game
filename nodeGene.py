@@ -1,40 +1,35 @@
 import math
 from copy import deepcopy
+import numpy as np
 
 class NodeGene(object):
 
     #Initializing neurons
-    def __init__(self, id, nodeType, layer, inputValue = 1):
+    def __init__(self, id, nodeType, layer):
         self.id = id
         self.nodeType = nodeType
-        self.inputValue = inputValue
+        self.inputValue = 0.0
         self.inputGenes = {}
         self.outputGenes = {}
-        #self.outputValue = 0.0
         self.recieved_inputs = 0
         self.sent_output = False
-        self.recieved_all_inputs = False
         self.layer = layer
 
     def expected_inputs(self):
         if self.nodeType == 'input':
-            return 0
+            return 1
         else:
             return len(self.inputGenes)
 
     def has_fired(self):
         return self.sent_output
 
-    def check_if_recieved(self):
-         self.recieved_all_inputs = (self.recieved_inputs == self.expected_inputs())
-         return self.recieved_all_inputs
-
     def ready(self):
-        self.check_if_recieved()
-        return (not self.sent_output and self.recieved_all_inputs)
+        recieved_all_inputs = (self.recieved_inputs == self.expected_inputs())
+        return (not self.sent_output and recieved_all_inputs)
 
     def activation(self):
-        self.inputValue = self.sigmoid(self.inputValue)        
+        return self.sigmoid(self.inputValue)        
 
     def addInputGene(self, inputGene):
         self.inputGenes[inputGene.innovation_number] = inputGene
@@ -44,15 +39,11 @@ class NodeGene(object):
 
     #Activation function
     def sigmoid(self, input):
-        return 1 / (1 + math.exp(-input))
+        return (2.0 / (1.0 + math.exp(-4.9 * input)) - 1.0)
 
-    def addInput(self, inputValue):
-        self.inputValue += inputValue
-        self.recieved_inputs += 1
-
-        if(self.nodeType != 'input'):
-            if self.check_if_recieved():
-                self.activation()
+    def addInput(self, value):
+        self.inputValue += value
+        self.recieved_inputs += 1   
         
     def set_id(self, id):
         self.id = id
@@ -63,18 +54,12 @@ class NodeGene(object):
         for connectionGene in self.outputGenes.values():
             if connectionGene.enabled:
                 #connectionGene.output_neuron.addInput(self.inputValue * connectionGene.weight)
-                connectionGene.output_neuron.addInput(self.inputValue * connectionGene.weight)
+                connectionGene.output_neuron.addInput(self.activation() * connectionGene.weight)
             else:
                 connectionGene.output_neuron.addInput(0)
 
-    def clone(self):
-        return deepcopy(self)
-
-    def copy(self):
-        return NodeGene(id = self.id, nodeType = self.nodeType, inputValue = self.inputValue, inputGenes = self.inputGenes, outputGenes = self.outputGenes  )
-
     def reset_neuron(self):
-        self.outputValue = 0.0
+        self.inputValue = 0.0
         self.recieved_inputs = 0
         self.sent_output = False
 
