@@ -15,8 +15,13 @@ class Species(object):
         self.generation_number = 0
         self.representative = genome 
 
-        self.genomes = {i:genome.clone() for i in range(self.population_size)}
-     
+        genome.set_species(self.id)
+        genome.set_generation(self.generation_number)
+
+        self.genomes = {i:genome.clone() for i in xrange(self.population_size)}
+
+        for i in xrange(1, self.population_size):
+            self.genomes[i].reinitialize()
         self.times_stagnated = 0
         self.active = True
         self.avg_max_fitness_achieved = 0
@@ -34,6 +39,9 @@ class Species(object):
 
     def generate_fitness(self):
         species_score = 0
+
+        self.pretty_print_s_id(self.id)
+        self.pretty_print_gen_id(self.generation_number)
 
         neural_networks = self.genomes.values()
 
@@ -106,8 +114,8 @@ class Species(object):
     
         while(genome_id < self.population_size):
             #crossover happens here
-            random_genome = self.genomes[random.randint(0, len(ids) -1)]
-            random_genome_mate = self.genomes[random.randint(0, len(ids) -1)]
+            random_genome = self.genomes[random.randint(0, len(ids) -1)].clone()
+            random_genome_mate = self.genomes[random.randint(0, len(ids) -1)].clone()
 
             if random.uniform(0, 1) > config.CROSSOVER_CHANCE:
                 genomes[genome_id] = random_genome
@@ -161,3 +169,16 @@ class Species(object):
         del self.genomes[self.population_size-1]
         self.population_size -= 1
 
+    def pretty_print_s_id(self, s_id):
+        print "\n"
+        print "===================="
+        print "===  Species:", s_id, " ==="
+        print "===================="
+        print "\n"
+
+
+    def pretty_print_gen_id(self, gen_id):
+        print "-----------------------"
+        print "---  Generation:", gen_id, " ---"
+        print "-----------------------"
+        print "\n"

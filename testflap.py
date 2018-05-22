@@ -12,7 +12,6 @@ def evolutionary_driver():
 	else:
 		solver = pickle.load(open("./save.p", "rb"))
 	 
-	print('a')
 	while True:
 		solver.start_evolution()
 		pickle.dump(solver, open("./save.p", "wb"))

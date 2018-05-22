@@ -39,7 +39,7 @@ class NodeGene(object):
 
     #Activation function
     def sigmoid(self, input):
-        return (2.0 / (1.0 + math.exp(-4.9 * input)) - 1.0)
+        return (2.0 / (1.0 + np.exp(-4.9 * input)) - 1.0)
 
     def addInput(self, value):
         self.inputValue += value

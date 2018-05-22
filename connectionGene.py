@@ -36,9 +36,6 @@ class ConnectionGene(object):
     def randomize_weight(self):
         self.weight = rand.uniform(-2, 2)
 
-    def clone(self):
-        return copy.deepcopy(self)
-
     def copy(self):
         return ConnectionGene(innovation_number = self.innovation_number, 
         input_neuron = self.input_neuron, 

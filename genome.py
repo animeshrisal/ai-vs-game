@@ -165,8 +165,8 @@ class Genome(object):
         return True if value >= config.ACTIVATION_THRESHOLD else False
 
     def reset_nodes(self):
-        for x in self.nodeList:
-            self.nodeList[x].reset_neuron()
+        for node_id, node in self.nodeList.items():
+            node.reset_neuron()
 
     def get_excess_genes(self, comparison_genome):
         excess_genes = []
