@@ -5,7 +5,7 @@ import numpy as np
 class NodeGene(object):
 
     #Initializing neurons
-    def __init__(self, id, nodeType, layer):
+    def __init__(self, id, nodeType):
         self.id = id
         self.nodeType = nodeType
         self.inputValue = 0.0
@@ -13,7 +13,6 @@ class NodeGene(object):
         self.outputGenes = {}
         self.recieved_inputs = 0
         self.sent_output = False
-        self.layer = layer
 
     def expected_inputs(self):
         if self.nodeType == 'input':

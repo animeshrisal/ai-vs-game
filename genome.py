@@ -33,7 +33,7 @@ class Genome(object):
         while i < self.num_input_neurons:
             new_neuron_id = self.get_next_neuron_id()
 
-            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'input', 0)
+            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'input')
             self.input_neurons.append(self.nodeList[new_neuron_id])
             i += 1
    
@@ -42,7 +42,7 @@ class Genome(object):
         self.output_neurons = []
         while i < self.num_output_neurons:
             new_neuron_id = self.get_next_neuron_id()
-            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'output', 11)
+            self.nodeList[new_neuron_id] = NodeGene(new_neuron_id, 'output')
             self.output_neurons.append(self.nodeList[new_neuron_id])
             i += 1
 
@@ -74,42 +74,29 @@ class Genome(object):
  
         
         if random.uniform(0, 1) < config.ADD_GENE_MUTATION:
-            node1 = random.choice(list(set().union(self.hiddenneurons, self.input_neurons)))
-            node2 = random.choice(list(set().union(self.hiddenneurons, self.output_neurons)))
-            weight = random.uniform(-1, 1)
+            new_gene_added = False
 
-            connectionImpossible = False
-            
-            if(node1.id == node2.id):
-                connectionImpossible = True
-            
-            if(node1.nodeType == 'hidden' and node2.nodeType == 'hidden'):
-                if(node2.layer <= node1.layer):
-                    connectionImpossible = True
-                
-
-            connectionExists = False
-
-            for connection in self.connectionList.values():
-                if(connection.input_neuron.id == node1.id and connection.output_neuron.id == node2.id):
-                    connectionExists = True
-                    break
-                
-                elif(connection.input_neuron.id == node2.id and connection.output_neuron.id == node1.id):
-                    connectionExists = True
+            while not new_gene_added:
+                if (len(self.hiddenneurons) == 0):
                     break
 
-            if(connectionExists or connectionImpossible):
-                return
+                node1 = random.choice(list(set().union(self.hiddenneurons, self.input_neurons)))
+                node2 = random.choice(list(set().union(self.hiddenneurons, self.output_neurons)))
 
-            else:
+                connection_check = True
 
-                innovation_number = self.innovation.getInnovation()
-                newConnection = ConnectionGene(innovation_number, node1, node2, weight, True)
-                self.connectionList[newConnection.innovation_number] = newConnection
+                for connection in self.connectionList.values():
+                    if(connection.input_neuron.id == node1.id and connection.output_neuron.id == node2.id):
+                        connection_check = False
+                        break
 
-            
-        
+                if(node1.id >= node2.id):
+                    connection_check = False
+
+                if connection_check:
+                    newConnection = ConnectionGene(self.innovation.getInnovation(), node1, node2)
+                    self.connectionList[newConnection.innovation_number] = newConnection  
+                    new_gene_added = True      
         
         if random.uniform(0, 1) < config.ADD_NODE_MUTATION and len(self.nodeList) <= ( self.num_input_neurons + self.num_output_neurons + self.max_hidden_neurons):
             
@@ -120,18 +107,17 @@ class Genome(object):
                 if connection.enabled:
                     connection.disable()
 
-                    inNode = self.nodeList[connection.input_neuron.id]
-                    outNode = self.nodeList[connection.output_neuron.id]
-                    
-                    newNode = NodeGene(self.get_next_neuron_id(), "hidden", random.randint(inNode.layer, outNode.layer))
+                    newNode = NodeGene(connection.output_neuron.id, "hidden")
+                    self.nodeList[connection.output_neuron.id] = newNode
+                    connection.output_neuron.set_id(self.get_next_neuron_id())
+                    self.nodeList[connection.output_neuron.id] = connection.output_neuron
                     
                     innovation_number = self.innovation.getInnovation()
-                    inToNew = ConnectionGene(innovation_number, inNode, newNode, 1, True)
+                    inToNew = ConnectionGene(innovation_number, connection.input_neuron, newNode , 1, True)
                     innovation_number = self.innovation.getInnovation()
-                    newToOut = ConnectionGene(innovation_number, newNode, outNode, connection.weight, True)
-
-                    
-                    self.nodeList[newNode.id] = newNode
+                    newToOut = ConnectionGene(innovation_number, newNode, connection.output_neuron, connection.weight, True)
+                                        
+                    #self.nodeList[newNode.id] = newNode
                     self.connectionList[inToNew.innovation_number] = inToNew
                     self.connectionList[newToOut.innovation_number] = newToOut
                     

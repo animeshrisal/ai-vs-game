@@ -88,23 +88,25 @@ class Species(object):
         return alive_genomes_id
 
     
-    def crossover(self, genome1, genome2):
-        if genome1.fitness > genome2.fitness:
-            parent1, parent2 = genome1, genome2
+    def crossover(self, random_genome, random_genome_mate):
+        if random_genome.fitness > random_genome_mate.fitness:
+            fit_genome, unfit_genome = random_genome, random_genome_mate
         else:
-            parent1, parent2 = genome2, genome1
+            fit_genome, unfit_genome = random_genome_mate, random_genome
 
-        child = parent1
+        for g_id, gene in fit_genome.connectionList.items():
+            if unfit_genome.connectionList.has_key(g_id):
 
-        for parent1Connection in parent1.getConnectionGenes().values():
-            if parent1Connection.innovation_number in parent2.getConnectionGenes(): 
-                truthValue = bool(random.getrandbits(1))
-                childConGene = parent1Connection.copy() if truthValue else parent2.getConnectionGenes()[parent1Connection.innovation_number].copy()
-            else:
-                childConGene = parent1Connection.copy()
-                child.addConnectionGenes(childConGene)
+                # Randomly inherit from unfit genome
+                if random.uniform(-1, 1) < 0:
+                    gene.weight = unfit_genome.connectionList[g_id].weight
 
-        return child
+                # Have chance of disabling if either parent is disabled
+                if not gene.enabled or not unfit_genome.connectionList[g_id].enabled:
+                    if random.uniform(-1, 1) < config.INHERIT_DISABLED_GENE_RATE:
+                        gene.disable()
+
+        return fit_genome
 
     def create_next_generation(self, ids):
         genomes = {}
@@ -114,13 +116,12 @@ class Species(object):
     
         while(genome_id < self.population_size):
             #crossover happens here
-            random_genome = self.genomes[random.randint(0, len(ids) -1)].clone()
-            random_genome_mate = self.genomes[random.randint(0, len(ids) -1)].clone()
+            random_genome = self.genomes[0].clone()
+            random_genome_mate = self.genomes[random.randint(0, len(ids))].clone()
 
             if random.uniform(0, 1) > config.CROSSOVER_CHANCE:
                 genomes[genome_id] = random_genome
                 
-
             else:
                 genomes[genome_id] = self.crossover(random_genome, random_genome_mate)
 
@@ -152,7 +153,7 @@ class Species(object):
                 self.genomes = {i:genome.clone() for i in range(self.population_size)}
 
                 for genome in self.genomes.values():
-                    pass #reinitialize genome
+                    genome.reinitialize()
 
         if (self.population_size < config.WEAK_SPECIES_THRESHOLD):
             self.active = False #Too weak to live
