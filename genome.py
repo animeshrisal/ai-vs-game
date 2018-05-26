@@ -127,12 +127,12 @@ class Genome(object):
         return deepcopy(self)
 
     def calculateOutput(self, X):
-
-        X = preprocessing.scale(X)
-        
+   
         for i, input_value in enumerate(X):
             self.input_neurons[i].addInput(input_value)
         
+
+        output = [False, False]
         complete = False
         while not complete:
 
@@ -145,10 +145,20 @@ class Genome(object):
                 if not x.has_fired():
                     complete = False
 
-        output_neuron = self.output_neurons[0]
-        value = output_neuron.activation()
+        output_neuron_1 = self.output_neurons[0]
+        output_neuron_2 = self.output_neurons[1]
+        value_1 = output_neuron_1.activation()
+        value_2 = output_neuron_2.activation()
         self.reset_nodes()
-        return True if value >= config.ACTIVATION_THRESHOLD else False
+        
+        if value_1 >= config.ACTIVATION_THRESHOLD:
+            output[0] = True
+        
+        if value_2 >= config.ACTIVATION_THRESHOLD:
+            output[1] = True
+
+        return output
+
 
     def reset_nodes(self):
         for node_id, node in self.nodeList.items():
