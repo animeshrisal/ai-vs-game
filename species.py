@@ -45,31 +45,7 @@ class Species(object):
 
         neural_networks = self.genomes.values()
 
-        app = flpy.FlappyBirdApp(neural_networks)
-        app.play()
-        results = app.crash_info
-
-        for crash_info in results:
-
-            distance_from_pipes = 0
-            if (crash_info['y'] < crash_info['upperPipes'][0]['y']):
-                distance_from_pipes = abs(crash_info['y'] - crash_info['upperPipes'][0]['y'])       
-            elif (crash_info['y'] > crash_info['upperPipes'][0]['y']):      
-                distance_from_pipes = abs(crash_info['y'] - crash_info['lowerPipes'][0]['y'])       
-
-            fitness_score = ((crash_info['score'] * 1000)       
-                              + (crash_info['distance'])        
-                              - (distance_from_pipes * 3)       
-                              - (1.5 * crash_info['energy']))
-
-            # Should experiment with this more.
-            # fitness_score = ((crash_info['distance'])
-            #                  - (1.5 * crash_info['energy']))
-
-            neural_networks[crash_info['network_id']].set_fitness(fitness_score)
-            species_score += fitness_score
-
-        print "\nSpecies Score:", species_score
+        print("\nSpecies Score:", species_score)
 
         return species_score
 
@@ -171,15 +147,15 @@ class Species(object):
         self.population_size -= 1
 
     def pretty_print_s_id(self, s_id):
-        print "\n"
-        print "===================="
-        print "===  Species:", s_id, " ==="
-        print "===================="
-        print "\n"
+        print("\n")
+        print("====================")
+        print("===  Species:", s_id, " ===")
+        print("====================")
+        print("\n")
 
 
     def pretty_print_gen_id(self, gen_id):
-        print "-----------------------"
-        print "---  Generation:", gen_id, " ---"
-        print "-----------------------"
-        print "\n"
+        print("-----------------------")
+        print("---  Generation:", gen_id, " ---")
+        print("-----------------------")
+        print("\n")

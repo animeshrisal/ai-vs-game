@@ -1,4 +1,4 @@
 #ignoring neuroevolution for windows virtual environment
 neuroevolution
 *.pyc
-pygame
+pygame_env

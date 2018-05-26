@@ -1,6 +1,6 @@
 import math
 from copy import deepcopy
-import numpy as np
+
 
 class NodeGene(object):
 

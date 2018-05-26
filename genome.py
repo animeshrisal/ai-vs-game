@@ -4,7 +4,7 @@ import random
 import config
 from copy import deepcopy
 import time
-from sklearn import preprocessing
+
 
 class Genome(object):
 
