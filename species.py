@@ -1,11 +1,9 @@
 from genome import Genome
 import random
 import config
-import numpy as np
-from scipy.stats import expon
-import FlapPyBird.flappy as flpy
 import os
 os.chdir(os.getcwd() + '/FlapPyBird/')
+import twobythree as tbt
 
 class Species(object):
 
@@ -18,9 +16,9 @@ class Species(object):
         genome.set_species(self.id)
         genome.set_generation(self.generation_number)
 
-        self.genomes = {i:genome.clone() for i in xrange(self.population_size)}
+        self.genomes = {i:genome.clone() for i in range(self.population_size)}
 
-        for i in xrange(1, self.population_size):
+        for i in range(1, self.population_size):
             self.genomes[i].reinitialize()
         self.times_stagnated = 0
         self.active = True
@@ -44,6 +42,9 @@ class Species(object):
         self.pretty_print_gen_id(self.generation_number)
 
         neural_networks = self.genomes.values()
+
+        app = tbt.Game(neural_networks)
+        app.play()
 
         print("\nSpecies Score:", species_score)
 
@@ -71,7 +72,7 @@ class Species(object):
             fit_genome, unfit_genome = random_genome_mate, random_genome
 
         for g_id, gene in fit_genome.connectionList.items():
-            if unfit_genome.connectionList.has_key(g_id):
+            if g_id in unfit_genome.connectionList:
 
                 # Randomly inherit from unfit genome
                 if random.uniform(-1, 1) < 0:

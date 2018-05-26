@@ -1,4 +1,4 @@
-from NEAT import NEAT
+from neat import NEAT
 import sys
 import pickle
 import os.path
