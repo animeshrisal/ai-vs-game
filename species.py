@@ -28,7 +28,7 @@ class Species(object):
     def run_generation(self):
         if self.active:
             species_fitness = self.generate_fitness()
-            avg_species_fitness = float(species_fitness)/float(self.population_size+1)
+            avg_species_fitness = float(species_fitness)/float(self.population_size)
             self.culling(avg_species_fitness)
             return avg_species_fitness if self.active else None
 
@@ -43,10 +43,15 @@ class Species(object):
 
         neural_networks = self.genomes.values()
 
-        app = tbt.Game(neural_networks)
+        for x in self.genomes.values():
+            x.fitness = 0
+
+        app = tbt.Game(neural_networks, self.generation_number, self.id)
         app.play()
 
-        print("\nSpecies Score:", species_score)
+        for x in self.genomes.values():
+            print(x.fitness)
+            species_score += x.fitness
 
         return species_score
 

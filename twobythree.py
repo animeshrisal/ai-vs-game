@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.image.fill(WHITE)
         self.rect = self.image.get_rect()
         self.rect.centerx = 30 * random.randint(0, 1)
-        self.rect.bottom = HEIGHT
+        self.rect.bottom = HEIGHT - 30
         self.speedx = 0
         self.touchleft = 0
         self.touchright = 0
@@ -46,14 +46,11 @@ class Player(pygame.sprite.Sprite):
         X.append(detector_matrix[4][1])
 
         decision = self.neural_network.calculateOutput(X) 
-    
+        self.neural_network.fitness += 1
         self.speedx = 0
         self.touchleft = 0
         self.touchright = 0
         
-        
-
-
         if self.rect.right > 40:
             self.rect.right = 60
             self.touchright = 1
@@ -76,18 +73,18 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((30,30))
+        self.image = pygame.Surface((30,90))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.x = 30 * random.randrange(0, 1)
-        self.rect.y = 0
+        self.rect.y = -60
         self.speedy = 30
 
     def update(self):
         self.rect.y +=  30
         if self.rect.top > HEIGHT + 10:
             self.rect.x = 30 * random.randrange(0, 2)
-            self.rect.y = 0
+            self.rect.y = -60
             self.speedy = 30
 
     def draw(self, screen):
@@ -96,7 +93,7 @@ class Enemy(pygame.sprite.Sprite):
 
 class Game(object):
 
-    def __init__(self, neural_networks):
+    def __init__(self, neural_networks, generation_number, species_number):
 
         pygame.init()
         pygame.mixer.init()
@@ -115,7 +112,8 @@ class Game(object):
             surf.blit(text_surface, text_rect)
 
         self.neural_networks = neural_networks
-
+        self.generation_number = generation_number
+        self.species_number = species_number
         self.num_organisms = len(self.neural_networks)
         
         self.players = [Player(neural_network, i) for i, neural_network in enumerate(self.neural_networks)]
@@ -140,15 +138,20 @@ class Game(object):
             player.update()
 
         for i, player in enumerate(self.players):
-            if player.rect == self.enemy.rect:
-                print("Player has been killed: ", player.id)
+            if player.rect.colliderect(self.enemy.rect):
+                self.num_organisms = len(self.players)
                 del(self.players[i])
+
+        if(len(self.players) == 0):
+            return True
+        
+        self.fitness += 1
 
         self.enemy.update()
         
-        self.label = self.myfont.render("Species" , 1, (255,255,0))
-        self.label2 = self.myfont.render("Organism" , 1, (255,255,0))
-        self.label3 = self.myfont.render("Generation" , 1, (255,255,0))
+        self.label = self.myfont.render("Species: " + str(self.species_number), 1, (255,255,0))
+        self.label2 = self.myfont.render("Organisms: " + str(self.num_organisms), 1, (255,255,0))
+        self.label3 = self.myfont.render("Generation: " + str(self.generation_number), 1, (255,255,0))
         self.label4 = self.myfont.render("Fitness" , 1, (255,255,0))
         self.label5 = self.myfont.render(str(self.fitness) , 1, (255,255,0))
 
@@ -162,10 +165,11 @@ class Game(object):
         self.screen.blit(self.label3, (80, 60))
         self.screen.blit(self.label4, (80, 80))
         self.screen.blit(self.label5, (170, 80))
-        self.enemy.draw(self.screen)
-
+        
         for player in self.players:
             player.draw(self.screen)
+
+        self.enemy.draw(self.screen)
 
         for x in range(0, 2):
             for y in range(0, 5):
@@ -178,8 +182,10 @@ class Game(object):
         pygame.display.update()
         self.clock.tick(FPS)
 
+        print(self.detector.matrix)
+
 
 if __name__ == "__main__":
     game = Game()
-    game.play()
+
 

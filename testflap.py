@@ -10,11 +10,11 @@ def evolutionary_driver():
 	if not os.path.isfile('save.p'):
 		solver = NEAT()
 	else:
-		solver = pickle.load(open("./save.p", "rb"))
+		solver = pickle.load(open("save.p", "rb"))
 	 
 	while True:
 		solver.start_evolution()
-		pickle.dump(solver, open("./save.p", "wb"))
+		pickle.dump(solver, open("save.p", "wb"))
 
 def write_genome_to_file(genome):
     # Write the genome that solves it to a file
