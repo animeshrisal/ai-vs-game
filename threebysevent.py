@@ -137,8 +137,6 @@ class Game(object):
             player.make_decision(self.detector.matrix)
             player.update()
 
-        self.enemy.update()
-
         for i, player in enumerate(self.players):
             if player.rect.colliderect(self.enemy.rect):
                 self.num_organisms = len(self.players)
@@ -149,7 +147,7 @@ class Game(object):
         
         self.fitness += 1
 
-
+        self.enemy.update()
         
         self.label = self.myfont.render("Species: " + str(self.species_number), 1, (255,255,0))
         self.label2 = self.myfont.render("Organisms: " + str(self.num_organisms), 1, (255,255,0))

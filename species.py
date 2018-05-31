@@ -2,7 +2,7 @@ from genome import Genome
 import random
 import config
 import os
-os.chdir(os.getcwd() + '/FlapPyBird/')
+os.chdir(os.getcwd())
 import twobythree as tbt
 
 class Species(object):
