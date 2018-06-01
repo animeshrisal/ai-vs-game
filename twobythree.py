@@ -4,7 +4,7 @@ from gridDetector import Detector
 from config import *
 from color import *
 import sys, os
-
+game_folder = os.path.dirname(os.path.abspath(__file__))
 
 WIDTH = 350
 HEIGHT = 150
@@ -30,6 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.speedx = 0
         self.touchleft = 0
         self.touchright = 0
+        self.image = pygame.image.load(os.path.join(game_folder, "assets/ship.png"))
         
 
     def make_decision(self, detector_matrix):
@@ -79,6 +80,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = 30 * random.randrange(0, 1)
         self.rect.y = -60
         self.speedy = 30
+        self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
 
     def update(self):
         self.rect.y +=  30
@@ -173,6 +175,7 @@ class Game(object):
 
         self.enemy.draw(self.screen)
 
+        '''
         for x in range(0, 2):
             for y in range(0, 5):
                 if(self.screen.get_at((x*30 , y*30)) == WHITE):
@@ -180,6 +183,22 @@ class Game(object):
 
                 if(self.screen.get_at((x*30 , y*30)) == RED):
                     self.detector.matrix[y][x] = -1
+        '''
+
+        for player in self.players:
+            x = int(player.rect.top / 30)
+            y = int(player.rect.left / 30)
+
+            if((x >= 0 and y >= 0) and (x < HEIGHT / 30)):
+                self.detector.matrix[x][y] = 1
+
+
+
+        x = int(self.enemy.rect.top / 30)
+        y = int(self.enemy.rect.left / 30)
+
+        if((x >= 0 and y >= 0) and (x < HEIGHT / 30)):
+            self.detector.matrix[x][y] = -1
 
         pygame.display.update()
         self.clock.tick(FPS)

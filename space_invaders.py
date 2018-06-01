@@ -3,6 +3,9 @@ import random
 from gridDetector import Detector
 from config import *
 from color import *
+import os
+game_folder = os.path.dirname(os.path.abspath(__file__))
+
 
 detector = Detector(300, 300, 30)
 
@@ -78,6 +81,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = 30 * random.randrange(0, 10)
         self.rect.y = 30
         self.speedy = 30
+        self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
+
 
     def update(self):
         self.rect.y +=  30
@@ -132,9 +137,9 @@ while running:
     detector.makeZero()
     pygame.display.flip()
 
-    for x in range(0, 10):
-        for y in range(0, 10):
-            if(screen.get_at((x*30 , y*30)) == WHITE):
+
+    
+            if(screen.get_at((x*30 , y*30)) == enemy.):
                 detector.matrix[y][x] = 1
 
             if(screen.get_at((x*30 , y*30)) == RED):
