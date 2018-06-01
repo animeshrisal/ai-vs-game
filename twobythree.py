@@ -164,6 +164,7 @@ class Game(object):
         # Draw / render
         self.detector.makeZero()
         self.screen.fill(BLACK)
+        self.screen.blit(pygame.image.load(os.path.join(game_folder, "assets/welp.png")), (0, 0))
         self.screen.blit(self.label, (80, 20))
         self.screen.blit(self.label2, (80, 40))
         self.screen.blit(self.label3, (80, 60))
