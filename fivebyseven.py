@@ -6,7 +6,7 @@ from color import *
 import sys, os
 game_folder = os.path.dirname(os.path.abspath(__file__))
 
-WIDTH = 440
+WIDTH = 488
 HEIGHT = 210
 FPS = 12
 
