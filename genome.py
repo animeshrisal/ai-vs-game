@@ -127,7 +127,6 @@ class Genome(object):
         return deepcopy(self)
 
     def calculateOutput(self, X):
-   
         for i, input_value in enumerate(X):
             self.input_neurons[i].addInput(input_value)
         
