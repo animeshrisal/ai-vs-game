@@ -8,7 +8,7 @@ game_folder = os.path.dirname(os.path.abspath(__file__))
 
 WIDTH = 440
 HEIGHT = 210
-FPS = 12000
+FPS = 12
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -31,6 +31,7 @@ class Player(pygame.sprite.Sprite):
         self.touchleft = 0
         self.touchright = 0
         self.image = pygame.image.load(os.path.join(game_folder, "assets/ship.png"))
+
         
 
     def make_decision(self, detector_matrix):
@@ -87,7 +88,7 @@ class Player(pygame.sprite.Sprite):
         self.touchright = 0
         
         if self.rect.right > 130:
-            self.rect.right = 150
+            self.rect.left = 120
             self.touchright = 1
 
         if self.rect.left < 30:
@@ -108,13 +109,14 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((30,90))
+        self.image = pygame.Surface((30,30))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.x = 30 * random.randint(0, 4)
-        self.rect.y = -60
+        self.rect.y = -30 * random.randint(0, 8)
         self.speedy = 30
         self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
+
 
     def update(self):
         self.rect.y +=  30
@@ -122,7 +124,7 @@ class Enemy(pygame.sprite.Sprite):
 
         if self.rect.top > HEIGHT + 10:
                 self.rect.x = 30 * random.randint(0, 4)
-                self.rect.y = -60
+                self.rect.y = -30 * random.randint(0, 8)
                 self.speedy = 30
 
     def draw(self, screen):
@@ -182,7 +184,7 @@ class Game(object):
 
         for i, player in enumerate(self.players):
             for j, enemy in enumerate(self.enemy):
-                if player.rect.colliderect(enemy.rect):
+                if player.rect.colliderect(enemy):
                     self.num_organisms = len(self.players)
                     del(self.players[i])
                     break
@@ -218,16 +220,16 @@ class Game(object):
             enemy.draw(self.screen)
 
         '''
-        for x in range(0, 2):
-            for y in range(0, 5):
+        for x in range(0, 4):
+            for y in range(0, 6):
                 if(self.screen.get_at((x*30 , y*30)) == WHITE):
-                    self.detector.matrix[y][x] = 1
+                    self.detector.matrix[y][x] = 0
 
                 if(self.screen.get_at((x*30 , y*30)) == RED):
                     self.detector.matrix[y][x] = -1
 
+        
         '''
-
         for enemy in self.enemy:
             x = int(enemy.rect.top / 30)
             y = int(enemy.rect.left / 30)
@@ -237,13 +239,7 @@ class Game(object):
         
         
         pygame.display.update()
-        self.clock.tick(FPS)
-
-        
-
-        print(self.detector.matrix)
-        
-
+        self.clock.tick(FPS)     
 
 if __name__ == "__main__":
     game = Game()

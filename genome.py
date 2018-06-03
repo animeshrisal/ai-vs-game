@@ -150,10 +150,10 @@ class Genome(object):
         value_2 = output_neuron_2.activation()
         self.reset_nodes()
         
-        if value_1 >= config.ACTIVATION_THRESHOLD:
+        if value_1 >= config.ACTIVATION_THRESHOLD and value_1 > value_2:
             output[0] = True
         
-        if value_2 >= config.ACTIVATION_THRESHOLD:
+        if value_2 >= config.ACTIVATION_THRESHOLD and value_2 > value_1:
             output[1] = True
 
         return output

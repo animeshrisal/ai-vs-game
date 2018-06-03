@@ -3,7 +3,7 @@ import random
 import config
 import os
 os.chdir(os.getcwd())
-import twobythree as tbt
+import fivebyseven as tbt
 
 class Species(object):
 
@@ -50,9 +50,9 @@ class Species(object):
         app.play()
 
         for x in self.genomes.values():
-            print(x.fitness)
             species_score += x.fitness
 
+        print(species_score)
         return species_score
 
     def evolve(self):
@@ -122,6 +122,7 @@ class Species(object):
 
         if(self.generation_number - self.generation_with_max_fitness) > config.STAGNATED_SPECIES_THRESHOLD:
             self.times_stagnated += 1
+            print(self.times_stagnated)
 
             if self.times_stagnated > config.STAGNATIONS_ALLOWED:
                 self.active = False #Dead Species

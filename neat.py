@@ -27,7 +27,6 @@ class NEAT(object):
 
         for individual_species_id, individual_species in self.species.items():
             individual_species.evolve()
-            print("aa")
 
         if config.SPECIATION:
             self.perform_speciation() 
