@@ -8,7 +8,7 @@ game_folder = os.path.dirname(os.path.abspath(__file__))
 
 WIDTH = 488
 HEIGHT = 210
-FPS = 12
+FPS = 24000
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -159,6 +159,11 @@ class Game(object):
         self.players = [Player(neural_network, i) for i, neural_network in enumerate(self.neural_networks)]
         self.random_position = [0, 1, 2, 3, 4]
         self.enemy = []
+        self.backgroundx1 = 0
+        self.backgroundy1 = 0
+        self.backgroundx2 = 0
+        self.backgroundy2 = -340
+
         for x in range(2):
             self.enemy.append(Enemy())
 
@@ -193,6 +198,14 @@ class Game(object):
             return True
         
         self.fitness += 1
+        self.backgroundy1 += 8
+        self.backgroundy2 += 8
+
+        if self.backgroundy1 > 340:
+            self.backgroundy1 = -342
+
+        if self.backgroundy2 > 340:
+            self.backgroundy2 = -342
 
 
         
@@ -207,11 +220,13 @@ class Game(object):
         # Draw / render
         self.detector.makeZero()
         self.screen.fill(BLACK)
-        self.screen.blit(self.label, (280, 20))
-        self.screen.blit(self.label2, (280, 40))
-        self.screen.blit(self.label3, (280, 60))
-        self.screen.blit(self.label4, (280, 80))
-        self.screen.blit(self.label5, (370, 80))
+        self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx1, self.backgroundy1))
+        self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx2, self.backgroundy2))
+        self.screen.blit(self.label, (200, 20))
+        self.screen.blit(self.label2, (200, 40))
+        self.screen.blit(self.label3, (200, 60))
+        self.screen.blit(self.label4, (200, 80))
+        self.screen.blit(self.label5, (300, 80))
         
         for player in self.players:
             player.draw(self.screen)
