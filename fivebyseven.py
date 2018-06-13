@@ -8,7 +8,7 @@ game_folder = os.path.dirname(os.path.abspath(__file__))
 
 WIDTH = 488
 HEIGHT = 210
-FPS = 24000
+FPS = 12
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -107,13 +107,15 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self,x , y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((30,30))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-        self.rect.x = 30 * random.randint(0, 4)
-        self.rect.y = -30 * random.randint(0, 8)
+        self.rect.x = x
+        self.rect.y = y
+        #self.rect.x = 30 * random.randint(0, 4)
+        #self.rect.y = -30 * random.randint(0, 8)
         self.speedy = 30
         self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
 
@@ -123,9 +125,13 @@ class Enemy(pygame.sprite.Sprite):
         self.same_position = True
 
         if self.rect.top > HEIGHT + 10:
+                '''
                 self.rect.x = 30 * random.randint(0, 4)
                 self.rect.y = -30 * random.randint(0, 8)
                 self.speedy = 30
+                '''
+
+                self.kill()
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
@@ -164,8 +170,8 @@ class Game(object):
         self.backgroundx2 = 0
         self.backgroundy2 = -340
 
-        for x in range(2):
-            self.enemy.append(Enemy())
+        #for x in range(2):
+        #    self.enemy.append(Enemy())
 
     def play(self):
         while True:
@@ -180,6 +186,16 @@ class Game(object):
                 self.on_render()
 
     def on_loop(self):
+        self.mouse = pygame.mouse.get_pos()
+        self.click = pygame.mouse.get_pressed()
+        if self.mouse <= (150, 150):
+            x = self.mouse[0] - self.mouse[0] % 30
+            y = self.mouse[1] - self.mouse[1] % 30
+
+            if self.click[0] == 1:
+                self.enemy.append(Enemy(x , y))
+            
+            
         for player in self.players:
             player.make_decision(self.detector.matrix)
             player.update()
