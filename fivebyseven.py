@@ -188,7 +188,7 @@ class Game(object):
     def on_loop(self):
         self.mouse = pygame.mouse.get_pos()
         self.click = pygame.mouse.get_pressed()
-        if self.mouse <= (150, 150):
+        if self.mouse[0] < 150 and self.mouse[1] < 90:
             x = self.mouse[0] - self.mouse[0] % 30
             y = self.mouse[1] - self.mouse[1] % 30
 
