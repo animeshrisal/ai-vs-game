@@ -6,8 +6,8 @@ from color import *
 import sys, os
 game_folder = os.path.dirname(os.path.abspath(__file__))
 
-WIDTH = 488
-HEIGHT = 210
+WIDTH = 700
+HEIGHT = 420
 FPS = 12
 
 WHITE = (255, 255, 255)
@@ -25,8 +25,8 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.Surface((30,30))
         self.image.fill(WHITE)
         self.rect = self.image.get_rect()
-        self.rect.left = 30 * random.randint(0, 4)
-        self.rect.bottom = HEIGHT - 30
+        self.rect.left = 60 * random.randint(0, 4)
+        self.rect.bottom = HEIGHT - 60
         self.speedx = 0
         self.touchleft = 0
         self.touchright = 0
@@ -87,19 +87,19 @@ class Player(pygame.sprite.Sprite):
         self.touchleft = 0
         self.touchright = 0
         
-        if self.rect.right > 130:
-            self.rect.left = 120
+        if self.rect.right > 260:
+            self.rect.left = 240
             self.touchright = 1
 
-        if self.rect.left < 30:
+        if self.rect.left < 60:
             self.rect.left = 0
             self.touchleft = 1
 
         if decision[0] and self.touchleft == 0:
-            self.speedx = -30
+            self.speedx = -60
 
         if decision[1] and self.touchright == 0:
-            self.speedx = 30
+            self.speedx = 60
 
         self.rect.x += self.speedx
     
@@ -109,22 +109,22 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,x , y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((30,30))
+        self.image = pygame.Surface((60,60))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         #self.rect.x = 30 * random.randint(0, 4)
         #self.rect.y = -30 * random.randint(0, 8)
-        self.speedy = 30
+        self.speedy = 60
         self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
 
 
     def update(self):
-        self.rect.y +=  30
+        self.rect.y +=  60
         self.same_position = True
 
-        if self.rect.top > HEIGHT + 10:
+        if self.rect.top > HEIGHT + 20:
                 '''
                 self.rect.x = 30 * random.randint(0, 4)
                 self.rect.y = -30 * random.randint(0, 8)
@@ -143,7 +143,7 @@ class Game(object):
 
         pygame.init()
         pygame.mixer.init()
-        self.detector = Detector(350, 150, 30)
+        self.detector = Detector(700, 300, 60)
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Space Invaders")
         self.clock = pygame.time.Clock()
@@ -168,7 +168,7 @@ class Game(object):
         self.backgroundx1 = 0
         self.backgroundy1 = 0
         self.backgroundx2 = 0
-        self.backgroundy2 = -340
+        self.backgroundy2 = -680
 
         #for x in range(2):
         #    self.enemy.append(Enemy())
@@ -188,9 +188,9 @@ class Game(object):
     def on_loop(self):
         self.mouse = pygame.mouse.get_pos()
         self.click = pygame.mouse.get_pressed()
-        if self.mouse[0] < 150 and self.mouse[1] < 90:
-            x = self.mouse[0] - self.mouse[0] % 30
-            y = self.mouse[1] - self.mouse[1] % 30
+        if self.mouse[0] < 300 and self.mouse[1] < 180:
+            x = self.mouse[0] - self.mouse[0] % 60
+            y = self.mouse[1] - self.mouse[1] % 60
 
             if self.click[0] == 1:
                 self.enemy.append(Enemy(x , y))
@@ -214,14 +214,14 @@ class Game(object):
             return True
         
         self.fitness += 1
-        self.backgroundy1 += 8
-        self.backgroundy2 += 8
+        self.backgroundy1 += 16
+        self.backgroundy2 += 16
 
-        if self.backgroundy1 > 340:
-            self.backgroundy1 = -342
+        if self.backgroundy1 > 680:
+            self.backgroundy1 = -684
 
-        if self.backgroundy2 > 340:
-            self.backgroundy2 = -342
+        if self.backgroundy2 > 680:
+            self.backgroundy2 = -684
 
 
         
@@ -238,11 +238,11 @@ class Game(object):
         self.screen.fill(BLACK)
         self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx1, self.backgroundy1))
         self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx2, self.backgroundy2))
-        self.screen.blit(self.label, (200, 20))
-        self.screen.blit(self.label2, (200, 40))
-        self.screen.blit(self.label3, (200, 60))
-        self.screen.blit(self.label4, (200, 80))
-        self.screen.blit(self.label5, (300, 80))
+        self.screen.blit(self.label, (400, 20))
+        self.screen.blit(self.label2, (400, 40))
+        self.screen.blit(self.label3, (400, 60))
+        self.screen.blit(self.label4, (400, 80))
+        self.screen.blit(self.label5, (500, 80))
         
         for player in self.players:
             player.draw(self.screen)
@@ -262,10 +262,10 @@ class Game(object):
         
         '''
         for enemy in self.enemy:
-            x = int(enemy.rect.top / 30)
-            y = int(enemy.rect.left / 30)
+            x = int(enemy.rect.top / 60)
+            y = int(enemy.rect.left / 60)
 
-            if((x >= 0 and y >= 0) and (x < HEIGHT / 30)):
+            if((x >= 0 and y >= 0) and (x < HEIGHT / 60)):
                   self.detector.matrix[x][y] = -1
         
         
