@@ -8,7 +8,7 @@ game_folder = os.path.dirname(os.path.abspath(__file__))
 
 WIDTH = 700
 HEIGHT = 420
-FPS = 12
+FPS = 12000
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -32,8 +32,6 @@ class Player(pygame.sprite.Sprite):
         self.touchright = 0
         self.image = pygame.image.load(os.path.join(game_folder, "assets/ship.png"))
 
-        
-
     def make_decision(self, detector_matrix):
         X = []
         X.append(detector_matrix[0][0])
@@ -41,7 +39,6 @@ class Player(pygame.sprite.Sprite):
         X.append(detector_matrix[0][2])
         X.append(detector_matrix[0][3])
         X.append(detector_matrix[0][4])
-
 
         X.append(detector_matrix[1][0])
         X.append(detector_matrix[1][1])
@@ -107,31 +104,29 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self,x , y):
+    def __init__(self, id):
+        self.id = id
+        self.counter = 0
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((60,60))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        #self.rect.x = 30 * random.randint(0, 4)
-        #self.rect.y = -30 * random.randint(0, 8)
+        self.rect.x = 60 
+        self.rect.y = -60 * self.id
         self.speedy = 60
         self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
-
+        self.movement = 0
+        
 
     def update(self):
+        self.counter += 1
         self.rect.y +=  60
-        self.same_position = True
 
-        if self.rect.top > HEIGHT + 20:
-                '''
-                self.rect.x = 30 * random.randint(0, 4)
-                self.rect.y = -30 * random.randint(0, 8)
-                self.speedy = 30
-                '''
-
-                self.kill()
+        if self.rect.top > HEIGHT + 200:
+            self.rect.x = 60 * (self.counter % 5)
+            self.rect.y = -60 * self.id
+            self.speedy = 60
+                    
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
@@ -170,8 +165,8 @@ class Game(object):
         self.backgroundx2 = 0
         self.backgroundy2 = -680
 
-        #for x in range(2):
-        #    self.enemy.append(Enemy())
+        for x in range(2):
+            self.enemy.append(Enemy(x))
 
     def play(self):
         while True:
@@ -185,16 +180,7 @@ class Game(object):
             else:
                 self.on_render()
 
-    def on_loop(self):
-        self.mouse = pygame.mouse.get_pos()
-        self.click = pygame.mouse.get_pressed()
-        if self.mouse[0] < 300 and self.mouse[1] < 180:
-            x = self.mouse[0] - self.mouse[0] % 60
-            y = self.mouse[1] - self.mouse[1] % 60
-
-            if self.click[0] == 1:
-                self.enemy.append(Enemy(x , y))
-            
+    def on_loop(self):         
             
         for player in self.players:
             player.make_decision(self.detector.matrix)

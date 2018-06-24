@@ -3,7 +3,7 @@ import random
 import config
 import os
 os.chdir(os.getcwd())
-import fivebyseven as tbt
+import single as tbt
 
 class Species(object):
 
