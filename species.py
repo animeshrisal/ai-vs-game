@@ -4,6 +4,7 @@ import config
 import os
 os.chdir(os.getcwd())
 import single as tbt
+import pickle
 
 class Species(object):
 
@@ -67,6 +68,8 @@ class Species(object):
     def get_survivors(self):
         sorted_genomes_id = sorted(self.genomes, key=lambda k: self.genomes[k].fitness, reverse=True)
         alive_genomes_id = sorted_genomes_id[:int(round(float(self.population_size)/2.0))]
+        most_fit_genome = self.genomes[alive_genomes_id[0]]
+        pickle.dump(most_fit_genome, open("aiagent.p", "wb"))
         return alive_genomes_id
 
     
