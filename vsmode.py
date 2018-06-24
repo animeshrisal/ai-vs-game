@@ -9,7 +9,7 @@ game_folder = os.path.dirname(os.path.abspath(__file__))
 
 WIDTH = 700
 HEIGHT = 420
-FPS = 12000
+FPS = 12
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -33,7 +33,9 @@ class Player(pygame.sprite.Sprite):
         self.touchright = 0
         self.image = pygame.image.load(os.path.join(game_folder, "assets/ship.png"))
 
-    def player_movement():
+    def player_movement(self):
+        keys=pygame.key.get_pressed()
+
         self.speedx = 0
         self.touchleft = 0
         self.touchright = 0
@@ -46,10 +48,10 @@ class Player(pygame.sprite.Sprite):
             self.rect.left = 0
             self.touchleft = 1
 
-        if decision[0] and self.touchleft == 0:
+        if keys[pygame.K_LEFT] and self.touchleft == 0:
             self.speedx = -60
 
-        if decision[1] and self.touchright == 0:
+        if keys[pygame.K_RIGHT] and self.touchright == 0:
             self.speedx = 60
 
         self.rect.x += self.speedx
@@ -196,7 +198,7 @@ class Game(object):
             enemy.update()
 
         self.aiagent.make_decision(self.detector.matrix)
-        self.player.update()
+        self.player.player_movement()
         
         self.fitness += 1
         self.backgroundy1 += 16
