@@ -180,6 +180,7 @@ class Game(object):
         self.backgroundy2 = -680
         self.player = Player(0)
         self.aiagent = Player(1, self.neat)
+        self.increase_enemy_counter = 0
         for x in range(1):
             self.enemy.append(Enemy(x))
 
@@ -193,14 +194,27 @@ class Game(object):
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
-     
+
+        for j, enemy in enumerate(self.enemy):
+            if self.aiagent.rect.colliderect(enemy):
+                print("AI has collided")
+
+            if self.player.rect.colliderect(enemy):
+                print("Player has collided")
+
+
         for enemy in self.enemy:
             enemy.update()
+
+        value = self.increase_enemy_counter % 200
+        if(value == 0):
+            self.enemy.append(Enemy(value))
 
         self.aiagent.make_decision(self.detector.matrix)
         self.player.player_movement()
         
         self.fitness += 1
+        self.increase_enemy_counter += 1
         self.backgroundy1 += 16
         self.backgroundy2 += 16
 

@@ -3,7 +3,7 @@ import random
 import config
 import os
 os.chdir(os.getcwd())
-import single as tbt
+import train as tbt
 import pickle
 
 class Species(object):

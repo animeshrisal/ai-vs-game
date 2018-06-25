@@ -163,7 +163,7 @@ class Game(object):
         self.backgroundx2 = 0
         self.backgroundy2 = -680
 
-        for x in range(5):
+        for x in range(6):
             self.enemy.append(Enemy(x))
 
     def play(self):
