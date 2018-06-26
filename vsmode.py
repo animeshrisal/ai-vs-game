@@ -145,7 +145,7 @@ class Enemy(pygame.sprite.Sprite):
 
         if self.rect.top > HEIGHT + 200:
             self.rect.x = 60 * random.randint(0, 4)
-            self.rect.y = -60 * 10
+            self.rect.y = -60 * 10 * self.id
             self.speedy = 60
                     
 

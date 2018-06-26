@@ -120,7 +120,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
 
 
-    def update(self):
+    def update(self, id ,  enemy_list):
         self.rect.y +=  60
         self.same_position = True
 
@@ -130,8 +130,9 @@ class Enemy(pygame.sprite.Sprite):
                 self.rect.y = -30 * random.randint(0, 8)
                 self.speedy = 30
                 '''
+                del(enemy_list[id])
 
-                self.kill()
+                
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
@@ -193,15 +194,16 @@ class Game(object):
             y = self.mouse[1] - self.mouse[1] % 60
 
             if self.click[0] == 1:
-                self.enemy.append(Enemy(x , y))
+                if len(self.enemy) < 3:
+                    self.enemy.append(Enemy(x , y))
             
             
         for player in self.players:
             player.make_decision(self.detector.matrix)
             player.update()
 
-        for enemy in self.enemy:
-            enemy.update()
+        for i, enemy in enumerate(self.enemy):
+            enemy.update(i, self.enemy)
 
         for i, player in enumerate(self.players):
             for j, enemy in enumerate(self.enemy):
