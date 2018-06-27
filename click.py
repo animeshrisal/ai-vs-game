@@ -144,7 +144,7 @@ class Game(object):
 
         pygame.init()
         pygame.mixer.init()
-        self.detector = Detector(700, 300, 60)
+        self.detector = Detector(420, 300, 60)
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Space Invaders")
         self.clock = pygame.time.Clock()
@@ -170,6 +170,7 @@ class Game(object):
         self.backgroundy1 = 0
         self.backgroundx2 = 0
         self.backgroundy2 = -680
+        self.mouse_limit = 0
 
         #for x in range(2):
         #    self.enemy.append(Enemy())
@@ -187,16 +188,20 @@ class Game(object):
                 self.on_render()
 
     def on_loop(self):
+        
         self.mouse = pygame.mouse.get_pos()
         self.click = pygame.mouse.get_pressed()
         if self.mouse[0] < 300 and self.mouse[1] < 180:
             x = self.mouse[0] - self.mouse[0] % 60
             y = self.mouse[1] - self.mouse[1] % 60
 
-            if self.click[0] == 1:
-                if len(self.enemy) < 3:
+            if self.click[0] == 1 and self.mouse_limit == 0:
+                if len(self.enemy) < 2:
+                    self.mouse_limit = 1
                     self.enemy.append(Enemy(x , y))
             
+            else:
+                self.mouse_limit = 0
             
         for player in self.players:
             player.make_decision(self.detector.matrix)
@@ -270,7 +275,7 @@ class Game(object):
             if((x >= 0 and y >= 0) and (x < HEIGHT / 60)):
                   self.detector.matrix[x][y] = -1
         
-        
+        print(self.detector.matrix)
         pygame.display.update()
         self.clock.tick(FPS)     
 

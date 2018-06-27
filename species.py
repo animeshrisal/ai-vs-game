@@ -4,7 +4,6 @@ import config
 import os
 os.chdir(os.getcwd())
 import csv
-
 import pickle
 from run_game import run_game
 
@@ -54,6 +53,10 @@ class Species(object):
         for x in self.genomes.values():
             species_score += x.fitness
 
+        with open('fitness.csv', 'a') as csvfile:
+            csvfile.write(str(species_score))
+            csvfile.write("\n")
+
         print(species_score)
         return species_score
 
@@ -70,6 +73,11 @@ class Species(object):
         sorted_genomes_id = sorted(self.genomes, key=lambda k: self.genomes[k].fitness, reverse=True)
         alive_genomes_id = sorted_genomes_id[:int(round(float(self.population_size)/2.0))]
         most_fit_genome = self.genomes[alive_genomes_id[0]]
+
+        with open('mostfit.csv', 'a') as csvfile:
+            csvfile.write(str(most_fit_genome.fitness))
+            csvfile.write("\n")
+
         pickle.dump(most_fit_genome, open("aiagent.p", "wb"))
         return alive_genomes_id
 

@@ -31,7 +31,10 @@ class Player(pygame.sprite.Sprite):
         self.speedx = 0
         self.touchleft = 0
         self.touchright = 0
-        self.image = pygame.image.load(os.path.join(game_folder, "assets/ship.png"))
+        if self.id == 0:
+            self.image = pygame.image.load(os.path.join(game_folder, "assets/player.png"))
+        else:
+            self.image = pygame.image.load(os.path.join(game_folder, "assets/ship.png"))
 
     def player_movement(self):
         keys=pygame.key.get_pressed()
@@ -140,10 +143,11 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
         self.movement = 0
         
-    def update(self):
+    def update(self, game):
         self.rect.y +=  60
 
         if self.rect.top > HEIGHT + 200:
+            game.total_collision_object_count += 1
             self.rect.x = 60 * random.randint(0, 4)
             self.rect.y = -60 * 10 * self.id
             self.speedy = 60
@@ -164,14 +168,8 @@ class Game(object):
         self.clock = pygame.time.Clock()
         self.myfont = pygame.font.SysFont("monospace", 15)
         self.fitness = 0
-
-
-        def desc(surf, text, x, y):
-            font = pygame.font.Font('arial', size)
-            text_surface = font.render(text, True, white)
-            text_rect = text_surface.get_rect()
-            text_rect.midtop = (x,y)
-            surf.blit(text_surface, text_rect)
+        self.total_collision_object_count = 0
+        self.number_of_ai_collisions = 0
 
         self.neat = pickle.load(open("aiagent.p", "rb"))
         self.enemy = []
@@ -182,8 +180,17 @@ class Game(object):
         self.player = Player(0)
         self.aiagent = Player(1, self.neat)
         self.increase_enemy_counter = 0
+
         for x in range(0):
             self.enemy.append(Enemy(x))
+
+        
+        def desc(surf, text, x, y):
+            font = pygame.font.Font('arial', size)
+            text_surface = font.render(text, True, white)
+            text_rect = text_surface.get_rect()
+            text_rect.midtop = (x,y)
+            surf.blit(text_surface, text_rect)
 
     def play(self):
         while True:
@@ -201,12 +208,21 @@ class Game(object):
                 print("AI has collided")
 
             if self.player.rect.colliderect(enemy):
+                self.number_of_ai_collisions += 1
                 print("Player has collided")
 
 
         for enemy in self.enemy:
-            enemy.update()
+            enemy.update(self)
 
+        print("Total Number of Collision Objects: " + str(self.total_collision_object_count))
+
+        if self.total_collision_object_count == 0:
+            print("Accuracy: 100%")
+        else:
+            percentage = ((self.total_collision_object_count - self.number_of_ai_collisions) / self.total_collision_object_count) * 100
+            print("Accuracy:" + str(percentage))
+        
         value = self.increase_enemy_counter % 200
         if(value == 0):
             enemy_value = self.increase_enemy_counter / 200

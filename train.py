@@ -179,7 +179,8 @@ class Game(object):
                 self.on_render()
 
     def on_loop(self):         
-            
+        keys=pygame.key.get_pressed()
+
         for player in self.players:
             player.make_decision(self.detector.matrix)
             player.update()
@@ -194,7 +195,7 @@ class Game(object):
                     del(self.players[i])
                     break
 
-        if(len(self.players) == 0):
+        if(len(self.players) == 0) or keys[pygame.K_LEFT]:
             return True
         
         self.fitness += 1
