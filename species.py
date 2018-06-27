@@ -3,8 +3,10 @@ import random
 import config
 import os
 os.chdir(os.getcwd())
-import fivebyseven as tbt
+import csv
+
 import pickle
+from run_game import run_game
 
 class Species(object):
 
@@ -47,8 +49,7 @@ class Species(object):
         for x in self.genomes.values():
             x.fitness = 0
 
-        app = tbt.Game(neural_networks, self.generation_number, self.id)
-        app.play()
+        run_game(neural_networks, self.generation_number, self.id)
 
         for x in self.genomes.values():
             species_score += x.fitness

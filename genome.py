@@ -4,6 +4,7 @@ import random
 import config
 from copy import deepcopy
 import time
+from calculate_output import calculate
 
 
 class Genome(object):
@@ -127,36 +128,7 @@ class Genome(object):
         return deepcopy(self)
 
     def calculateOutput(self, X):
-        for i, input_value in enumerate(X):
-            self.input_neurons[i].addInput(input_value)
-        
-
-        output = [False, False]
-        complete = False
-        while not complete:
-
-            complete = True
-
-            for x in self.nodeList.values():
-                if x.ready():
-                    x.fire()
-
-                if not x.has_fired():
-                    complete = False
-
-        output_neuron_1 = self.output_neurons[0]
-        output_neuron_2 = self.output_neurons[1]
-        value_1 = output_neuron_1.activation()
-        value_2 = output_neuron_2.activation()
-        self.reset_nodes()
-        
-        if value_1 >= config.ACTIVATION_THRESHOLD and value_1 > value_2:
-            output[0] = True
-        
-        if value_2 >= config.ACTIVATION_THRESHOLD and value_2 > value_1:
-            output[1] = True
-
-        return output
+        return calculate(self, X)
 
 
     def reset_nodes(self):

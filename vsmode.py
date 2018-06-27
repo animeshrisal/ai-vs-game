@@ -135,7 +135,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.x = 60 * random.randint(0, 4)
-        self.rect.y = -60 * 4 * self.id
+        self.rect.y = -60 * 10 * self.id
         self.speedy = 60
         self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
         self.movement = 0
@@ -165,6 +165,7 @@ class Game(object):
         self.myfont = pygame.font.SysFont("monospace", 15)
         self.fitness = 0
 
+
         def desc(surf, text, x, y):
             font = pygame.font.Font('arial', size)
             text_surface = font.render(text, True, white)
@@ -181,7 +182,7 @@ class Game(object):
         self.player = Player(0)
         self.aiagent = Player(1, self.neat)
         self.increase_enemy_counter = 0
-        for x in range(1):
+        for x in range(0):
             self.enemy.append(Enemy(x))
 
     def play(self):
@@ -208,7 +209,8 @@ class Game(object):
 
         value = self.increase_enemy_counter % 200
         if(value == 0):
-            self.enemy.append(Enemy(value))
+            enemy_value = self.increase_enemy_counter / 200
+            self.enemy.append(Enemy(enemy_value))
 
         self.aiagent.make_decision(self.detector.matrix)
         self.player.player_movement()
