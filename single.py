@@ -247,12 +247,8 @@ class Game(object):
 
         
         '''
-        for enemy in self.enemy:
-            x = int(enemy.rect.top / 60)
-            y = int(enemy.rect.left / 60)
-
-            if((x >= 0 and y >= 0) and (x < HEIGHT / 60)):
-                  self.detector.matrix[x][y] = -1
+        print(self.detector.matrix)
+        self.detector.fillMatrix(self)
         
         
         pygame.display.update()

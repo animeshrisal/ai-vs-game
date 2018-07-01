@@ -255,23 +255,10 @@ class Game(object):
         self.aiagent.draw(self.screen)
         self.player.draw(self.screen)
 
-        '''
-        for x in range(0, 4):
-            for y in range(0, 6):
-                if(self.screen.get_at((x*30 , y*30)) == WHITE):
-                    self.detector.matrix[y][x] = 0
+        self.detector.fillMatrix(self)
 
-                if(self.screen.get_at((x*30 , y*30)) == RED):
-                    self.detector.matrix[y][x] = -1
-
-        
-        '''
-        for enemy in self.enemy:
-            x = int(enemy.rect.top / 60)
-            y = int(enemy.rect.left / 60)
-
-            if((x >= 0 and y >= 0) and (x < HEIGHT / 60)):
-                  self.detector.matrix[x][y] = -1
+        print(self.detector.matrix)
+        self.detector.fillMatrix(self)
         
         pygame.display.update()
         self.clock.tick(FPS)     
