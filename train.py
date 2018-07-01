@@ -8,7 +8,7 @@ game_folder = os.path.dirname(os.path.abspath(__file__))
 
 WIDTH = 700
 HEIGHT = 420
-FPS = 12000
+FPS = 12
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -30,52 +30,21 @@ class Player(pygame.sprite.Sprite):
         self.speedx = 0
         self.touchleft = 0
         self.touchright = 0
-        self.image = pygame.image.load(os.path.join(game_folder, "assets/ship.png"))
+
+        self.images = []
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship1.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship2.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship3.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship4.png")))
+
+        self.image_index = 0
+        self.image = self.images[self.image_index]
 
     def make_decision(self, detector_matrix):
         X = []
-        X.append(detector_matrix[0][0])
-        X.append(detector_matrix[0][1])
-        X.append(detector_matrix[0][2])
-        X.append(detector_matrix[0][3])
-        X.append(detector_matrix[0][4])
-
-        X.append(detector_matrix[1][0])
-        X.append(detector_matrix[1][1])
-        X.append(detector_matrix[1][2])
-        X.append(detector_matrix[1][3])
-        X.append(detector_matrix[1][4])
-
-        X.append(detector_matrix[2][0])
-        X.append(detector_matrix[2][1])
-        X.append(detector_matrix[2][2])
-        X.append(detector_matrix[2][3])
-        X.append(detector_matrix[2][4])
-
-        X.append(detector_matrix[3][0])
-        X.append(detector_matrix[3][1])
-        X.append(detector_matrix[3][2])
-        X.append(detector_matrix[3][3])
-        X.append(detector_matrix[3][4])
-
-
-        X.append(detector_matrix[4][0])
-        X.append(detector_matrix[4][1])
-        X.append(detector_matrix[4][2])
-        X.append(detector_matrix[4][3])
-        X.append(detector_matrix[4][4])
-
-        X.append(detector_matrix[5][0])
-        X.append(detector_matrix[5][1])
-        X.append(detector_matrix[5][2])
-        X.append(detector_matrix[5][3])
-        X.append(detector_matrix[5][4])
-
-        X.append(detector_matrix[6][0])
-        X.append(detector_matrix[6][1])
-        X.append(detector_matrix[6][2])
-        X.append(detector_matrix[6][3])
-        X.append(detector_matrix[6][4])
+        for x in range(7):
+            for y in range(5):
+                X.append(detector_matrix[x][y])
 
 
         decision = self.neural_network.calculateOutput(X) 
@@ -101,6 +70,12 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.speedx
     
     def draw(self, screen):
+        self.image_index += 1
+
+        if self.image_index >= len(self.images):
+            self.image_index = 0
+        self.image = self.images[self.image_index]
+
         screen.blit(self.image, self.rect)
 
 class Enemy(pygame.sprite.Sprite):
@@ -115,6 +90,25 @@ class Enemy(pygame.sprite.Sprite):
         self.speedy = 60
         self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
         self.movement = 0
+
+        self.images = []
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid1.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid2.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid3.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid4.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid5.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid6.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid7.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid8.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid9.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid10.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid11.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid12.png")))
+        
+        self.image_index = random.randint(0,11)
+        self.image = self.images[self.image_index]
+        
+
         
 
     def update(self):
@@ -127,7 +121,14 @@ class Enemy(pygame.sprite.Sprite):
                     
 
     def draw(self, screen):
+        self.image_index += 1
+        if self.image_index >= len(self.images):
+            self.image_index = 0
+        self.image = self.images[self.image_index]
+
         screen.blit(self.image, self.rect)
+
+
 
 
 class Game(object):

@@ -61,48 +61,10 @@ class Player(pygame.sprite.Sprite):
 
     def make_decision(self, detector_matrix):
         X = []
-        X.append(detector_matrix[0][0])
-        X.append(detector_matrix[0][1])
-        X.append(detector_matrix[0][2])
-        X.append(detector_matrix[0][3])
-        X.append(detector_matrix[0][4])
 
-        X.append(detector_matrix[1][0])
-        X.append(detector_matrix[1][1])
-        X.append(detector_matrix[1][2])
-        X.append(detector_matrix[1][3])
-        X.append(detector_matrix[1][4])
-
-        X.append(detector_matrix[2][0])
-        X.append(detector_matrix[2][1])
-        X.append(detector_matrix[2][2])
-        X.append(detector_matrix[2][3])
-        X.append(detector_matrix[2][4])
-
-        X.append(detector_matrix[3][0])
-        X.append(detector_matrix[3][1])
-        X.append(detector_matrix[3][2])
-        X.append(detector_matrix[3][3])
-        X.append(detector_matrix[3][4])
-
-
-        X.append(detector_matrix[4][0])
-        X.append(detector_matrix[4][1])
-        X.append(detector_matrix[4][2])
-        X.append(detector_matrix[4][3])
-        X.append(detector_matrix[4][4])
-
-        X.append(detector_matrix[5][0])
-        X.append(detector_matrix[5][1])
-        X.append(detector_matrix[5][2])
-        X.append(detector_matrix[5][3])
-        X.append(detector_matrix[5][4])
-
-        X.append(detector_matrix[6][0])
-        X.append(detector_matrix[6][1])
-        X.append(detector_matrix[6][2])
-        X.append(detector_matrix[6][3])
-        X.append(detector_matrix[6][4])
+        for x in range(7):
+            for y in range(5):
+                X.append(detector_matrix[x][y])
 
 
         decision = self.neural_network.calculateOutput(X) 
@@ -259,7 +221,7 @@ class Game(object):
 
         print(self.detector.matrix)
         self.detector.fillMatrix(self)
-        
+
         pygame.display.update()
         self.clock.tick(FPS)     
 
