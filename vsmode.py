@@ -167,10 +167,10 @@ class Game(object):
 
         for j, enemy in enumerate(self.enemy):
             if self.aiagent.rect.colliderect(enemy):
+                self.number_of_ai_collisions += 1
                 print("AI has collided")
 
             if self.player.rect.colliderect(enemy):
-                self.number_of_ai_collisions += 1
                 print("Player has collided")
 
 
@@ -216,8 +216,6 @@ class Game(object):
 
         self.aiagent.draw(self.screen)
         self.player.draw(self.screen)
-
-        self.detector.fillMatrix(self)
 
         print(self.detector.matrix)
         self.detector.fillMatrix(self)

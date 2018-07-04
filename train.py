@@ -8,7 +8,7 @@ game_folder = os.path.dirname(os.path.abspath(__file__))
 
 WIDTH = 700
 HEIGHT = 420
-FPS = 12
+FPS = 12000
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -137,7 +137,7 @@ class Game(object):
 
         pygame.init()
         pygame.mixer.init()
-        self.detector = Detector(700, 300, 60)
+        self.detector = Detector(420, 300, 60)
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Space Invaders")
         self.clock = pygame.time.Clock()
@@ -256,7 +256,7 @@ class Game(object):
                   self.detector.matrix[x][y] = -1
         
 
-        print(self.detector.matrix)
+
         self.detector.fillMatrix(self)
         
         pygame.display.update()
