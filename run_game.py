@@ -1,4 +1,4 @@
-import click as tbt 
+import train as tbt 
 #train or click file
 
 def run_game(neural_networks, generation_number, id):

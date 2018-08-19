@@ -31,10 +31,16 @@ class Player(pygame.sprite.Sprite):
         self.speedx = 0
         self.touchleft = 0
         self.touchright = 0
-        if self.id == 0:
-            self.image = pygame.image.load(os.path.join(game_folder, "assets/player.png"))
-        else:
-            self.image = pygame.image.load(os.path.join(game_folder, "assets/ship.png"))
+        self.lives = 5
+
+        self.images = []
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship11.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship12.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship13.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship14.png")))
+
+        self.image_index = 0
+        self.image = self.images[self.image_index]
 
     def player_movement(self):
         keys=pygame.key.get_pressed()
@@ -90,31 +96,68 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.speedx
     
     def draw(self, screen):
+        self.image_index += 1
+
+        if self.image_index >= len(self.images):
+            self.image_index = 0
+        self.image = self.images[self.image_index]
+
         screen.blit(self.image, self.rect)
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((60,60))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-        self.rect.x = 60 * random.randint(0, 4)
-        self.rect.y = -60 * 10 * self.id
+        self.rect.x = x
+        self.rect.y = y
         self.speedy = 60
-        self.image = pygame.image.load(os.path.join(game_folder, "assets/asteroid.png"))
+
+        self.images = []
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid1.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid2.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid3.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid4.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid5.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid6.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid7.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid8.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid9.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid10.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid11.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid12.png")))
+        self.image_index = random.randint(0,11)
+        self.image = self.images[self.image_index]
+
         self.movement = 0
         
-    def update(self, game):
+    def vs_update(self, id , enemy_list):
         self.rect.y +=  60
+        self.same_position = True
 
-        if self.rect.top > HEIGHT + 200:
-            game.total_collision_object_count += 1
+        if self.rect.top > HEIGHT + 20:
             self.rect.x = 60 * random.randint(0, 4)
-            self.rect.y = -60 * 10 * self.id
+            self.rect.y = -60 * 10 * random.randint(0, 4)
             self.speedy = 60
-                    
+
+    def click_update(self, id ,  enemy_list):
+        self.rect.y +=  60
+        self.same_position = True
+
+        if self.rect.top > HEIGHT + 20:
+                '''
+                self.rect.x = 30 * random.randint(0, 4)
+                self.rect.y = -30 * random.randint(0, 8)
+                self.speedy = 30
+                '''
+                del(enemy_list[id])
+                                
     def draw(self, screen):
+        self.image_index += 1
+        if self.image_index >= len(self.images):
+            self.image_index = 0
+        self.image = self.images[self.image_index]
         screen.blit(self.image, self.rect)
 
 
@@ -138,8 +181,8 @@ class Game(object):
         self.backgroundy1 = 0
         self.backgroundx2 = 0
         self.backgroundy2 = -680
-        self.player = Player(0)
-        self.aiagent = Player(1, self.neat)
+        self.human = Player(0)
+        self.player = Player(1, self.neat)
         self.increase_enemy_counter = 0
 
         for x in range(0):
@@ -187,7 +230,11 @@ class Game(object):
                 self.click_on_render()
 
     def click_on_loop(self):
-                
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                pygame.quit()
+                sys.exit()
+
         self.mouse = pygame.mouse.get_pos()
         self.click = pygame.mouse.get_pressed()
         if self.mouse[0] < 300 and self.mouse[1] < 180:
@@ -206,15 +253,13 @@ class Game(object):
         self.player.update()
 
         for i, enemy in enumerate(self.enemy):
-            enemy.update(i, self.enemy)
+            enemy.click_update(i, self.enemy)
 
         for j, enemy in enumerate(self.enemy):
-            if player.rect.colliderect(enemy):
+            if self.player.rect.colliderect(enemy):
                 del(self.player)
-                break
+                return True
 
-        if(len(self.players) == 0):
-            return True
         
         self.fitness += 1
         self.backgroundy1 += 16
@@ -233,29 +278,12 @@ class Game(object):
         self.screen.fill(BLACK)
         self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx1, self.backgroundy1))
         self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx2, self.backgroundy2))
-        self.screen.blit(self.label, (400, 20))
-        self.screen.blit(self.label2, (400, 40))
-        self.screen.blit(self.label3, (400, 60))
-        self.screen.blit(self.label4, (400, 80))
-        self.screen.blit(self.label5, (500, 80))
-        
-        for player in self.players:
-            player.draw(self.screen)
+
+        self.player.draw(self.screen)
 
         for enemy in self.enemy:
             enemy.draw(self.screen)
 
-        '''
-        for x in range(0, 4):
-            for y in range(0, 6):
-                if(self.screen.get_at((x*30 , y*30)) == WHITE):
-                    self.detector.matrix[y][x] = 0
-
-                if(self.screen.get_at((x*30 , y*30)) == RED):
-                    self.detector.matrix[y][x] = -1
-
-        
-        '''
         for enemy in self.enemy:
             x = int(enemy.rect.top / 60)
             y = int(enemy.rect.left / 60)
@@ -267,38 +295,36 @@ class Game(object):
         pygame.display.update()
         self.clock.tick(FPS)   
 
-    def vs_on_loop(self):    
+    def vs_on_loop(self):
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
 
         for j, enemy in enumerate(self.enemy):
-            if self.aiagent.rect.colliderect(enemy):
-                self.number_of_ai_collisions += 1
-                print("AI has collided")
-
             if self.player.rect.colliderect(enemy):
-                print("Player has collided")
+                self.number_of_ai_collisions += 1
+                self.player.lives -= 1
+                print(self.player.lives)
+                print("AI Player has collided")
+
+            if self.human.rect.colliderect(enemy):
+                self.human.lives -= 1
+                print(self.human.lives)
+                print("Human Player has collided")
 
         for enemy in self.enemy:
-            enemy.update(self)
+            enemy.vs_update(self, self.enemy)
 
-        print("Total Number of Collision Objects: " + str(self.total_collision_object_count))
-
-        if self.number_of_ai_collisions == 0:
-            print("Accuracy: 100%")
-        else:
-            percentage = ((self.total_collision_object_count - self.number_of_ai_collisions) / self.total_collision_object_count) * 100
-            print("Accuracy:" + str(percentage))
         
         value = self.increase_enemy_counter % 200
         if(value == 0):
             enemy_value = self.increase_enemy_counter / 200
-            self.enemy.append(Enemy(enemy_value))
+            self.enemy.append(Enemy(enemy_value, 0))
 
-        self.aiagent.make_decision(self.detector.matrix)
-        self.player.player_movement()
+        self.player.make_decision(self.detector.matrix)
+        self.human.player_movement()
         
         self.fitness += 1
         self.increase_enemy_counter += 1
@@ -321,8 +347,8 @@ class Game(object):
         for enemy in self.enemy:
             enemy.draw(self.screen)
 
-        self.aiagent.draw(self.screen)
         self.player.draw(self.screen)
+        self.human.draw(self.screen)
 
 
         self.detector.fillMatrix(self)

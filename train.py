@@ -20,7 +20,6 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, neural_network, id):
         pygame.sprite.Sprite.__init__(self)
 
-        self.id = id
         self.neural_network = neural_network
         self.image = pygame.Surface((60,60))
         self.image.fill(WHITE)
@@ -104,13 +103,9 @@ class Enemy(pygame.sprite.Sprite):
         self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid10.png")))
         self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid11.png")))
         self.images.append(pygame.image.load(os.path.join(game_folder, "assets/asteroid/asteroid12.png")))
-        
         self.image_index = random.randint(0,11)
         self.image = self.images[self.image_index]
         
-
-        
-
     def update(self):
         self.rect.y +=  60
 
@@ -119,17 +114,12 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.y = -60 * 10
             self.speedy = 60
                     
-
     def draw(self, screen):
         self.image_index += 1
         if self.image_index >= len(self.images):
             self.image_index = 0
         self.image = self.images[self.image_index]
-
         screen.blit(self.image, self.rect)
-
-
-
 
 class Game(object):
 
@@ -208,8 +198,6 @@ class Game(object):
 
         if self.backgroundy2 > 680:
             self.backgroundy2 = -684
-
-
         
         self.label = self.myfont.render("Species: " + str(self.species_number), 1, (255,255,0))
         self.label2 = self.myfont.render("Organisms: " + str(self.num_organisms), 1, (255,255,0))
@@ -255,10 +243,7 @@ class Game(object):
             if((x >= 0 and y >= 0) and (x < HEIGHT / 60)):
                   self.detector.matrix[x][y] = -1
         
-
-
         self.detector.fillMatrix(self)
-        
         pygame.display.update()
         self.clock.tick(FPS)     
 
