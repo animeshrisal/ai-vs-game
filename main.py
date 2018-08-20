@@ -257,6 +257,10 @@ class Game(object):
 
         for j, enemy in enumerate(self.enemy):
             if self.player.rect.colliderect(enemy):
+                self.player.lives -= 1
+                print(self.player.lives)
+
+            if (self.player.lives == 0):
                 del(self.player)
                 return True
 
