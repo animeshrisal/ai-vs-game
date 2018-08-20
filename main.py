@@ -6,6 +6,7 @@ from color import *
 import sys, os
 import pickle
 game_folder = os.path.dirname(os.path.abspath(__file__))
+import time
 
 WIDTH = 700
 HEIGHT = 420
@@ -33,11 +34,13 @@ class Player(pygame.sprite.Sprite):
         self.touchright = 0
         self.lives = 5
 
+    def generate_image(self, color):
         self.images = []
-        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship11.png")))
-        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship12.png")))
-        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship13.png")))
-        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship14.png")))
+        color = str(color)
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+color+"1.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+color+"2.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+color+"3.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+color+"4.png")))
 
         self.image_index = 0
         self.image = self.images[self.image_index]
@@ -196,6 +199,20 @@ class Game(object):
             surf.blit(text_surface, text_rect)
 
     def menu(self):
+        cursor_position = [30, 256]
+        game_mode = 1
+        self.picker = pygame.Surface((32,16))
+        self.option1 = pygame.Surface((48, 239))
+        self.option2 = pygame.Surface((48, 198))
+        self.option1_description = pygame.Surface((65, 245))
+        self.option2_description = pygame.Surface((65, 245))
+
+        self.picker = pygame.image.load(os.path.join(game_folder, "assets/menu_arrow.png"))
+        self.option1 = pygame.image.load(os.path.join(game_folder, "assets/mode1.png"))
+        self.option2 = pygame.image.load(os.path.join(game_folder, "assets/mode2.png"))
+        self.option1_description = pygame.image.load(os.path.join(game_folder, "assets/mode1_description.png"))
+        self.option2_description = pygame.image.load(os.path.join(game_folder, "assets/mode2_description.png"))
+        
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
@@ -204,27 +221,45 @@ class Game(object):
 
             keys=pygame.key.get_pressed()
             
-            if keys[pygame.K_LEFT]:
-                return 1
+            if keys[pygame.K_UP]:
+                cursor_position[1] = 256
+                game_mode = 1
+
+            if keys[pygame.K_DOWN]:
+                cursor_position[1] = 330
+                game_mode = 2
 
             if keys[pygame.K_RIGHT]:
-                return 2
+                return game_mode
 
             self.screen.fill(BLACK)
+            self.screen.blit(self.picker, cursor_position)
+            self.screen.blit(self.option1, (48, 239))
+            self.screen.blit(self.option2, (48, 320))  
+
+            if cursor_position[1] == 256:
+                self.screen.blit(self.option1_description, (384, 272))
+
+            else:
+                self.screen.blit(self.option2_description, (384, 272))
+
+
             self.label = self.myfont.render("Species", 1, (255,255,0))
-            self.screen.blit(self.label, (20, 20))
 
             pygame.display.update()
             self.clock.tick(FPS) 
 
-
     def play(self, choice):
         if choice == 1:
+            color = self.color_chooser()
+            self.human.generate_image(color)
+            self.player.generate_image(1)
             while True:
                 self.vs_on_loop()
                 self.vs_on_render()
         
         if choice == 2:
+            self.player.generate_image(random.randint(1,4))
             while True:
                 self.click_on_loop()
                 self.click_on_render()
@@ -257,14 +292,17 @@ class Game(object):
 
         for j, enemy in enumerate(self.enemy):
             if self.player.rect.colliderect(enemy):
+                sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Hit.wav"))
+                sound.play()
                 self.player.lives -= 1
                 print(self.player.lives)
 
             if (self.player.lives == 0):
+                sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Explosion.wav"))
+                sound.play()
                 del(self.player)
                 return True
 
-        
         self.fitness += 1
         self.backgroundy1 += 16
         self.backgroundy2 += 16
@@ -277,7 +315,7 @@ class Game(object):
 
 
     def click_on_render(self):
-                # Draw / render
+        # Draw / render
         self.detector.makeZero()
         self.screen.fill(BLACK)
         self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx1, self.backgroundy1))
@@ -310,18 +348,21 @@ class Game(object):
             if self.player.rect.colliderect(enemy):
                 self.number_of_ai_collisions += 1
                 self.player.lives -= 1
+                sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Hit.wav"))
+                sound.play()
                 print(self.player.lives)
                 print("AI Player has collided")
 
             if self.human.rect.colliderect(enemy):
                 self.human.lives -= 1
+                sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Hit.wav"))
+                sound.play()
                 print(self.human.lives)
                 print("Human Player has collided")
 
         for enemy in self.enemy:
             enemy.vs_update(self, self.enemy)
 
-        
         value = self.increase_enemy_counter % 200
         if(value == 0):
             enemy_value = self.increase_enemy_counter / 200
@@ -354,12 +395,62 @@ class Game(object):
         self.player.draw(self.screen)
         self.human.draw(self.screen)
 
-
         self.detector.fillMatrix(self)
         print(self.detector.matrix)
 
         pygame.display.update()
         self.clock.tick(FPS) 
+
+    def color_chooser(self):
+        ship_choice = 1
+        cursor_position = [304, 75]
+        box_position = [340, 48]
+        self.picker = pygame.Surface((32,16))
+        self.color_box = pygame.Surface((80, 80))
+        self.ship1 = pygame.Surface((60,60))
+        self.ship2 = pygame.Surface((60,60))
+        self.ship3 = pygame.Surface((60,60))
+        self.ship4 = pygame.Surface((60,60))
+        self.picker = pygame.image.load(os.path.join(game_folder, "assets/menu_arrow.png"))
+        self.color_box = pygame.image.load(os.path.join(game_folder, "assets/color.png"))
+        self.ship1 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship11.png"))
+        self.ship2 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship21.png"))
+        self.ship3 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship31.png"))
+        self.ship4 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship41.png"))
+        
+        while True:
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    pygame.quit()
+                    sys.exit()
+            keys=pygame.key.get_pressed()
+            
+            if keys[pygame.K_UP] and cursor_position[1] != 75:
+                cursor_position[1] -= 80 
+                box_position[1] -= 80 
+                ship_choice -= 1
+
+            if keys[pygame.K_DOWN]  and cursor_position[1] != 315:
+                cursor_position[1] += 80
+                box_position[1] += 80 
+                ship_choice += 1
+
+            if keys[pygame.K_RETURN]:
+                return ship_choice
+        
+            self.screen.fill(BLACK)
+            self.screen.blit(self.color_box, box_position)
+            self.screen.blit(self.picker, cursor_position)
+            self.screen.blit(self.ship1, (350, 60))
+            self.screen.blit(self.ship2, (350, 140))  
+            self.screen.blit(self.ship3, (350, 220))
+            self.screen.blit(self.ship4, (350, 300))
+
+            pygame.display.update()
+            self.clock.tick(FPS) 
+            
+
 
 if __name__ == "__main__":
     game = Game()
