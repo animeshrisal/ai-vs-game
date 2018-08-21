@@ -201,12 +201,14 @@ class Game(object):
     def menu(self):
         cursor_position = [30, 256]
         game_mode = 1
+        self.menu_screen = pygame.Surface((420, 700))
         self.picker = pygame.Surface((32,16))
         self.option1 = pygame.Surface((48, 239))
         self.option2 = pygame.Surface((48, 198))
         self.option1_description = pygame.Surface((65, 245))
         self.option2_description = pygame.Surface((65, 245))
 
+        self.menu_screen = pygame.image.load(os.path.join(game_folder, "assets/menu.png"))
         self.picker = pygame.image.load(os.path.join(game_folder, "assets/menu_arrow.png"))
         self.option1 = pygame.image.load(os.path.join(game_folder, "assets/mode1.png"))
         self.option2 = pygame.image.load(os.path.join(game_folder, "assets/mode2.png"))
@@ -233,6 +235,7 @@ class Game(object):
                 return game_mode
 
             self.screen.fill(BLACK)
+            self.screen.blit(self.menu_screen, (0, 0))
             self.screen.blit(self.picker, cursor_position)
             self.screen.blit(self.option1, (48, 239))
             self.screen.blit(self.option2, (48, 320))  
@@ -254,12 +257,16 @@ class Game(object):
             color = self.color_chooser()
             self.human.generate_image(color)
             self.player.generate_image(1)
+            sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Music.wav"))
+            sound.play(-1)
             while True:
                 self.vs_on_loop()
                 self.vs_on_render()
         
         if choice == 2:
             self.player.generate_image(random.randint(1,4))
+            sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Music.wav"))
+            sound.play(-1)
             while True:
                 self.click_on_loop()
                 self.click_on_render()
@@ -269,6 +276,9 @@ class Game(object):
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
+
+        if keys[pygame.K_F1]:
+            self.pause_menu()
 
         self.mouse = pygame.mouse.get_pos()
         self.click = pygame.mouse.get_pressed()
@@ -343,6 +353,11 @@ class Game(object):
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
+
+        keys= pygame.key.get_pressed()
+
+        if keys[pygame.K_F1]:
+            self.pause_menu()
 
         for j, enemy in enumerate(self.enemy):
             if self.player.rect.colliderect(enemy):
@@ -419,7 +434,6 @@ class Game(object):
         self.ship4 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship41.png"))
         
         while True:
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     pygame.quit()
@@ -436,6 +450,7 @@ class Game(object):
                 box_position[1] += 80 
                 ship_choice += 1
 
+
             if keys[pygame.K_RETURN]:
                 return ship_choice
         
@@ -449,9 +464,60 @@ class Game(object):
 
             pygame.display.update()
             self.clock.tick(FPS) 
+
+    def pause_menu(self):
+        choice = 1
+        cursor_position = [256, 224]
+        self.picker = pygame.Surface((32, 16))
+        self.paused = pygame.Surface((19, 77))
+        self.continues = pygame.Surface((21, 116))
+        self.exit = pygame.Surface((21, 51))
+
+        self.picker = pygame.image.load(os.path.join(game_folder, "assets/menu_arrow.png"))
+        self.paused = pygame.image.load(os.path.join(game_folder, "assets/paused.png"))
+        self.continues = pygame.image.load(os.path.join(game_folder, "assets/Continue.png"))
+        self.exit = pygame.image.load(os.path.join(game_folder, "assets/exit.png"))
+        
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    pygame.quit()
+                    sys.exit()
+
+            keys=pygame.key.get_pressed()
+
+            if keys[pygame.K_UP]:
+                cursor_position[1] = 224 
+                choice = 1
+
+            if keys[pygame.K_DOWN]:
+                cursor_position[1] = 269
+                choice = 2
+
+            if keys[pygame.K_RETURN]:
+                if choice == 1:
+                    return
+
+                if choice == 2:
+                    choice = self.menu()
+                    self.play(choice)
+
+
+            keys=pygame.key.get_pressed()
+
+            self.screen.fill(BLACK)
+            self.screen.blit(self.picker, cursor_position)
+            self.screen.blit(self.paused, (304, 173))
+            self.screen.blit(self.continues, (283, 228))
+            self.screen.blit(self.exit, (313, 278))
+
+
+            pygame.display.update()
+            self.clock.tick(FPS)   
+
+
+
             
-
-
 if __name__ == "__main__":
     game = Game()
     choice = game.menu()
