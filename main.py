@@ -167,8 +167,10 @@ class Enemy(pygame.sprite.Sprite):
 class Game(object):
 
     def __init__(self):
+        
         pygame.init()
         pygame.mixer.init()
+        pygame.mixer.music.load(os.path.join(game_folder, "assets/sound/Music.wav"))
         self.detector = Detector(420, 300, 60)
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Space Invaders")
@@ -257,8 +259,8 @@ class Game(object):
             color = self.color_chooser()
             self.human.generate_image(color)
             self.player.generate_image(1)
-            sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Music.wav"))
-            sound.play(-1)
+
+            pygame.mixer.music.play(-1)
             while True:
                 self.vs_on_loop()
                 self.vs_on_render()
@@ -277,8 +279,12 @@ class Game(object):
                 pygame.quit()
                 sys.exit()
 
+        keys=pygame.key.get_pressed()
+
         if keys[pygame.K_F1]:
+            pygame.mixer.music.pause()
             self.pause_menu()
+            pygame.mixer.music.unpause()
 
         self.mouse = pygame.mouse.get_pos()
         self.click = pygame.mouse.get_pressed()
@@ -357,7 +363,9 @@ class Game(object):
         keys= pygame.key.get_pressed()
 
         if keys[pygame.K_F1]:
+            pygame.mixer.music.pause()
             self.pause_menu()
+            pygame.mixer.music.unpause()
 
         for j, enemy in enumerate(self.enemy):
             if self.player.rect.colliderect(enemy):
@@ -499,6 +507,7 @@ class Game(object):
                     return
 
                 if choice == 2:
+                    pygame.mixer.music.stop()
                     choice = self.menu()
                     self.play(choice)
 
