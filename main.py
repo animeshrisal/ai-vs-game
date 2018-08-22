@@ -255,6 +255,8 @@ class Game(object):
             self.clock.tick(FPS) 
 
     def play(self, choice):
+
+
         if choice == 1:
             color = self.color_chooser()
             self.human.generate_image(color)
@@ -266,6 +268,7 @@ class Game(object):
                 self.vs_on_render()
         
         if choice == 2:
+            self.player.lives = 5
             self.player.generate_image(random.randint(1,4))
             sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Music.wav"))
             sound.play(-1)
@@ -316,8 +319,7 @@ class Game(object):
             if (self.player.lives == 0):
                 sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Explosion.wav"))
                 sound.play()
-                del(self.player)
-                return True
+                self.end_screen(2)
 
         self.fitness += 1
         self.backgroundy1 += 16
@@ -376,12 +378,18 @@ class Game(object):
                 print(self.player.lives)
                 print("AI Player has collided")
 
+            if self.player.lives == 0:
+                self.end_screen(1)
+
             if self.human.rect.colliderect(enemy):
                 self.human.lives -= 1
                 sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Hit.wav"))
                 sound.play()
                 print(self.human.lives)
                 print("Human Player has collided")
+
+                if self.human.lives == 0:
+                    self.end_screen(1)
 
         for enemy in self.enemy:
             enemy.vs_update(self, self.enemy)
@@ -511,22 +519,65 @@ class Game(object):
                     choice = self.menu()
                     self.play(choice)
 
-
-            keys=pygame.key.get_pressed()
-
             self.screen.fill(BLACK)
             self.screen.blit(self.picker, cursor_position)
             self.screen.blit(self.paused, (304, 173))
             self.screen.blit(self.continues, (283, 228))
             self.screen.blit(self.exit, (313, 278))
 
+            pygame.display.update()
+            self.clock.tick(FPS)  
+
+    def end_screen(self, mode):
+        choice = 1
+        cursor_position = [254, 183]
+        self.you_win = pygame.Surface((21, 107))
+        self.you_lose = pygame.Surface((21, 107))
+        self.picker = pygame.Surface((32, 16))
+        self.try_again = pygame.Surface((29, 126))
+        self.exit = pygame.Surface((21, 51))
+
+        self.picker = pygame.image.load(os.path.join(game_folder, "assets/menu_arrow.png"))
+        self.try_again = pygame.image.load(os.path.join(game_folder, "assets/tryagain.png"))
+        self.exit = pygame.image.load(os.path.join(game_folder, "assets/exit.png"))
+        self.you_win = pygame.image.load(os.path.join(game_folder, "assets/youwin.png"))
+        self.you_lose = pygame.image.load(os.path.join(game_folder, "assets/youlose.png"))
+        self.exit = pygame.image.load(os.path.join(game_folder, "assets/exit.png"))
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    pygame.quit()
+                    sys.exit()
+
+            self.screen.fill(BLACK)
+            self.screen.blit(self.try_again, (281, 186))
+            self.screen.blit(self.exit, (316, 236))
+            self.screen.blit(self.picker, cursor_position)
+            self.screen.blit(self.picker, cursor_position)
+
+            keys=pygame.key.get_pressed()
+
+            if keys[pygame.K_UP]:
+                cursor_position[1] = 183
+                choice = 1
+
+            if keys[pygame.K_DOWN]:
+                cursor_position[1] = 233
+                choice = 2
+
+            if keys[pygame.K_RETURN]:
+                if choice == 1:
+                    self.play(mode)
+
+                elif choice == 2:
+                    pygame.mixer.music.stop()
+                    choice = self.menu()
+                    self.play(choice)
 
             pygame.display.update()
-            self.clock.tick(FPS)   
+            self.clock.tick(FPS)  
 
-
-
-            
 if __name__ == "__main__":
     game = Game()
     choice = game.menu()
