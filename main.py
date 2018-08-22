@@ -173,7 +173,7 @@ class Game(object):
         pygame.mixer.music.load(os.path.join(game_folder, "assets/sound/Music.wav"))
         self.detector = Detector(420, 300, 60)
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption("Space Invaders")
+        pygame.display.set_caption("Asteroid Attack")
         self.clock = pygame.time.Clock()
         self.myfont = pygame.font.SysFont("monospace", 15)
         self.fitness = 0
@@ -255,23 +255,21 @@ class Game(object):
             self.clock.tick(FPS) 
 
     def play(self, choice):
-
+        self.player.lives = 5
 
         if choice == 1:
             color = self.color_chooser()
             self.human.generate_image(color)
             self.player.generate_image(1)
-
             pygame.mixer.music.play(-1)
             while True:
                 self.vs_on_loop()
                 self.vs_on_render()
         
         if choice == 2:
-            self.player.lives = 5
+            
             self.player.generate_image(random.randint(1,4))
-            sound = pygame.mixer.Sound(os.path.join(game_folder, "assets/sound/Music.wav"))
-            sound.play(-1)
+            pygame.mixer.music.play(-1)
             while True:
                 self.click_on_loop()
                 self.click_on_render()
@@ -482,6 +480,7 @@ class Game(object):
             self.clock.tick(FPS) 
 
     def pause_menu(self):
+        pygame.mixer.music.pause()
         choice = 1
         cursor_position = [256, 224]
         self.picker = pygame.Surface((32, 16))
