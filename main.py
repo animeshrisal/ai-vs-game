@@ -34,13 +34,13 @@ class Player(pygame.sprite.Sprite):
         self.touchright = 0
         self.lives = 5
 
-    def generate_image(self, color):
+    def generate_image(self, ship):
         self.images = []
-        color = str(color)
-        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+color+"1.png")))
-        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+color+"2.png")))
-        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+color+"3.png")))
-        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+color+"4.png")))
+        design = str(ship[0]) + str(ship[1])
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+design+"1.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+design+"2.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+design+"3.png")))
+        self.images.append(pygame.image.load(os.path.join(game_folder, "assets/ship/ship"+design+"4.png")))
 
         self.image_index = 0
         self.image = self.images[self.image_index]
@@ -260,7 +260,7 @@ class Game(object):
         if choice == 1:
             color = self.color_chooser()
             self.human.generate_image(color)
-            self.player.generate_image(1)
+            self.player.generate_image([1, 1])
             pygame.mixer.music.play(-1)
             while True:
                 self.vs_on_loop()
@@ -268,7 +268,7 @@ class Game(object):
         
         if choice == 2:
             
-            self.player.generate_image(random.randint(1,4))
+            self.player.generate_image([random.randint(1,3), random.randint(1, 4)])
             pygame.mixer.music.play(-1)
             while True:
                 self.click_on_loop()
@@ -431,21 +431,42 @@ class Game(object):
         self.clock.tick(FPS) 
 
     def color_chooser(self):
-        ship_choice = 1
+        ship_choice = [2, 1]
+
         cursor_position = [304, 75]
         box_position = [340, 48]
         self.picker = pygame.Surface((32,16))
         self.color_box = pygame.Surface((80, 80))
-        self.ship1 = pygame.Surface((60,60))
-        self.ship2 = pygame.Surface((60,60))
-        self.ship3 = pygame.Surface((60,60))
-        self.ship4 = pygame.Surface((60,60))
+        self.ship11 = pygame.Surface((60,60))
+        self.ship12 = pygame.Surface((60,60))
+        self.ship13 = pygame.Surface((60,60))
+        self.ship14 = pygame.Surface((60,60))
+        self.ship21 = pygame.Surface((60,60))
+        self.ship22 = pygame.Surface((60,60))
+        self.ship23 = pygame.Surface((60,60))
+        self.ship24 = pygame.Surface((60,60))
+        self.ship31 = pygame.Surface((60,60))
+        self.ship32 = pygame.Surface((60,60))
+        self.ship33 = pygame.Surface((60,60))
+        self.ship34 = pygame.Surface((60,60))
+
         self.picker = pygame.image.load(os.path.join(game_folder, "assets/menu_arrow.png"))
         self.color_box = pygame.image.load(os.path.join(game_folder, "assets/color.png"))
-        self.ship1 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship11.png"))
-        self.ship2 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship21.png"))
-        self.ship3 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship31.png"))
-        self.ship4 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship41.png"))
+
+        self.ship11 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship111.png"))
+        self.ship12 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship121.png"))
+        self.ship13 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship131.png"))
+        self.ship14 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship141.png"))
+
+        self.ship21 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship211.png"))
+        self.ship22 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship221.png"))
+        self.ship23 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship231.png"))
+        self.ship24 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship241.png"))
+
+        self.ship31 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship311.png"))
+        self.ship32 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship321.png"))
+        self.ship33 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship331.png"))
+        self.ship34 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship341.png"))
         
         while True:
             for event in pygame.event.get():
@@ -457,13 +478,22 @@ class Game(object):
             if keys[pygame.K_UP] and cursor_position[1] != 75:
                 cursor_position[1] -= 80 
                 box_position[1] -= 80 
-                ship_choice -= 1
+                ship_choice[1] -= 1
 
             if keys[pygame.K_DOWN]  and cursor_position[1] != 315:
                 cursor_position[1] += 80
                 box_position[1] += 80 
-                ship_choice += 1
+                ship_choice[1] += 1
 
+            if keys[pygame.K_LEFT] and cursor_position[0] != 184:
+                cursor_position[0] -= 120
+                box_position[0] -= 120
+                ship_choice[0] -= 1
+
+            if keys[pygame.K_RIGHT] and cursor_position[0] != 424:
+                cursor_position[0] += 120
+                box_position[0] += 120
+                ship_choice[0] += 1
 
             if keys[pygame.K_RETURN]:
                 return ship_choice
@@ -471,10 +501,20 @@ class Game(object):
             self.screen.fill(BLACK)
             self.screen.blit(self.color_box, box_position)
             self.screen.blit(self.picker, cursor_position)
-            self.screen.blit(self.ship1, (350, 60))
-            self.screen.blit(self.ship2, (350, 140))  
-            self.screen.blit(self.ship3, (350, 220))
-            self.screen.blit(self.ship4, (350, 300))
+            self.screen.blit(self.ship11, (230, 60))
+            self.screen.blit(self.ship12, (230, 140))  
+            self.screen.blit(self.ship13, (230, 220))
+            self.screen.blit(self.ship14, (230, 300))
+
+            self.screen.blit(self.ship21, (350, 60))
+            self.screen.blit(self.ship22, (350, 140))  
+            self.screen.blit(self.ship23, (350, 220))
+            self.screen.blit(self.ship24, (350, 300))
+
+            self.screen.blit(self.ship31, (470, 60))
+            self.screen.blit(self.ship32, (470, 140))  
+            self.screen.blit(self.ship33, (470, 220))
+            self.screen.blit(self.ship34, (470, 300))
 
             pygame.display.update()
             self.clock.tick(FPS) 
@@ -565,7 +605,7 @@ class Game(object):
                 cursor_position[1] = 233
                 choice = 2
 
-            if keys[pygame.K_RETURN]:
+            if keys[pygame.K_RIGHT]:
                 if choice == 1:
                     self.play(mode)
 
@@ -580,7 +620,6 @@ class Game(object):
 if __name__ == "__main__":
     game = Game()
     choice = game.menu()
-    print(choice)
     game.play(choice)
 
 
