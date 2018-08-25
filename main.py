@@ -18,7 +18,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-class Player(pygame.sprite.Sprite):
+class Player(pygame.sprite.Sprite): 
     def __init__(self, id, neural_network = None):
         pygame.sprite.Sprite.__init__(self)
 
@@ -256,6 +256,7 @@ class Game(object):
 
     def play(self, choice):
         self.player.lives = 5
+        self.human.lives = 5
 
         if choice == 1:
             color = self.color_chooser()
@@ -377,6 +378,7 @@ class Game(object):
                 print("AI Player has collided")
 
             if self.player.lives == 0:
+
                 self.end_screen(1)
 
             if self.human.rect.colliderect(enemy):
@@ -450,6 +452,8 @@ class Game(object):
         self.ship33 = pygame.Surface((60,60))
         self.ship34 = pygame.Surface((60,60))
 
+        self.ui = pygame.image.load(os.path.join(game_folder, "assets/ui.png"))
+
         self.picker = pygame.image.load(os.path.join(game_folder, "assets/menu_arrow.png"))
         self.color_box = pygame.image.load(os.path.join(game_folder, "assets/color.png"))
 
@@ -467,6 +471,14 @@ class Game(object):
         self.ship32 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship321.png"))
         self.ship33 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship331.png"))
         self.ship34 = pygame.image.load(os.path.join(game_folder, "assets/ship/ship341.png"))
+
+        self.portrait_animation_index = 0
+        self.portrait_animation = []
+        for x in range(6):
+            self.portrait_animation.append(pygame.image.load(os.path.join(game_folder, "assets/portraits/choiceportrait"+ str(x) +".png")))
+        
+        self.portrait = self.portrait_animation[self.portrait_animation_index]
+
         
         while True:
             for event in pygame.event.get():
@@ -497,8 +509,16 @@ class Game(object):
 
             if keys[pygame.K_RETURN]:
                 return ship_choice
+
+            self.portrait_animation_index += 1
+
+            if self.portrait_animation_index >= len(self.portrait_animation):
+                self.portrait_animation_index = 0
+            self.portrait = self.portrait_animation[self.portrait_animation_index]
+
         
             self.screen.fill(BLACK)
+            self.screen.blit(self.portrait, (16, 16))
             self.screen.blit(self.color_box, box_position)
             self.screen.blit(self.picker, cursor_position)
             self.screen.blit(self.ship11, (230, 60))
@@ -515,6 +535,7 @@ class Game(object):
             self.screen.blit(self.ship32, (470, 140))  
             self.screen.blit(self.ship33, (470, 220))
             self.screen.blit(self.ship34, (470, 300))
+            self.screen.blit(self.ui, (0, 0))
 
             pygame.display.update()
             self.clock.tick(FPS) 
@@ -568,6 +589,7 @@ class Game(object):
             self.clock.tick(FPS)  
 
     def end_screen(self, mode):
+        self.enemy.clear()
         choice = 1
         cursor_position = [254, 183]
         self.you_win = pygame.Surface((21, 107))
@@ -605,7 +627,7 @@ class Game(object):
                 cursor_position[1] = 233
                 choice = 2
 
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_RETURN]:
                 if choice == 1:
                     self.play(mode)
 
