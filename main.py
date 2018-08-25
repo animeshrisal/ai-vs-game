@@ -589,6 +589,7 @@ class Game(object):
             self.clock.tick(FPS)  
 
     def end_screen(self, mode):
+        pygame.mixer.music.pause()
         self.enemy.clear()
         choice = 1
         cursor_position = [254, 183]
