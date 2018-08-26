@@ -337,7 +337,8 @@ class Game(object):
         self.screen.fill(BLACK)
         self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx1, self.backgroundy1))
         self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx2, self.backgroundy2))
-
+        self.aiportrait = pygame.image.load(os.path.join(game_folder, "assets/portraits/ai.png"))
+        self.sidething = pygame.image.load(os.path.join(game_folder , "assets/sidething.png"))
         self.player.draw(self.screen)
 
         for enemy in self.enemy:
@@ -349,6 +350,12 @@ class Game(object):
 
             if((x >= 0 and y >= 0) and (x < HEIGHT / 60)):
                   self.detector.matrix[x][y] = -1
+        
+        self.screen.blit(self.sidething, (300, 0))
+        for x in range(self.player.lives):
+            self.screen.blit(self.player.images[0], (600 - x * 60,200))
+        
+        self.screen.blit(self.aiportrait, (466, 100))
         
         print(self.detector.matrix)
         pygame.display.update()
@@ -419,12 +426,26 @@ class Game(object):
         self.screen.fill(BLACK)
         self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx1, self.backgroundy1))
         self.screen.blit(pygame.image.load(os.path.join(game_folder , "assets/background.png")), (self.backgroundx2, self.backgroundy2))
+        self.sidething = pygame.image.load(os.path.join(game_folder , "assets/sidething.png"))
+        self.humanportrait = pygame.image.load(os.path.join(game_folder, "assets/portraits/player.png"))
+        self.aiportrait = pygame.image.load(os.path.join(game_folder, "assets/portraits/ai.png"))
+
+        
 
         for enemy in self.enemy:
             enemy.draw(self.screen)
 
+        self.screen.blit(self.sidething, (300, 0))
+        self.screen.blit(self.humanportrait, (466, 17))
+        self.screen.blit(self.aiportrait, (466, 222))
         self.player.draw(self.screen)
         self.human.draw(self.screen)
+
+        for x in range(self.human.lives):
+            self.screen.blit(self.human.images[0], (600 - x * 60,113))
+
+        for x in range(self.player.lives):
+            self.screen.blit(self.player.images[0], (600 - x * 60,337))
 
         self.detector.fillMatrix(self)
         print(self.detector.matrix)
