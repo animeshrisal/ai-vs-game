@@ -1,6 +1,3 @@
-Implementation of NEAT algorithm in python
+A asteroid dodging game that you can play with an AI.
 
-Status: Unfinished
-
-
-Run main.py and play the game
+The AI was trained using Neural networks and genetic algorithms.
