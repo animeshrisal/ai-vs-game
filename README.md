@@ -9,4 +9,4 @@ Run the game using the command
 python main.py
 ```
 
-You can choose the mode by pressingg the right arrow button.
+You can choose the mode by pressing the right arrow button.
