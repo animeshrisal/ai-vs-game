@@ -133,7 +133,7 @@ class Game(object):
         self.clock = pygame.time.Clock()
         self.myfont = pygame.font.SysFont("monospace", 15)
         self.fitness = 0
-        
+
         self.neural_networks = neural_networks
         self.generation_number = generation_number
         self.species_number = species_number
@@ -217,18 +217,6 @@ class Game(object):
         for enemy in self.enemy:
             enemy.draw(self.screen)
 
-        '''
-        for x in range(0, 4):
-            for y in range(0, 6):
-                if(self.screen.get_at((x*30 , y*30)) == WHITE):
-                    self.detector.matrix[y][x] = 0
-
-                if(self.screen.get_at((x*30 , y*30)) == RED):
-                    self.detector.matrix[y][x] = -1
-
-        
-        '''
-        
         for enemy in self.enemy:
             x = int(enemy.rect.top / 60)
             y = int(enemy.rect.left / 60)

@@ -3,7 +3,6 @@ import random
 import config
 import os
 os.chdir(os.getcwd())
-import csv
 import pickle
 from run_game import run_game
 
@@ -124,8 +123,6 @@ class Species(object):
             genome_id += 1
 
         self.genomes = genomes
-
-    
         
     def culling(self, new_average_fitness):
         if new_average_fitness > self.avg_max_fitness_achieved:

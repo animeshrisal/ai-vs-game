@@ -1,10 +1,14 @@
-import pygame
-import random
-from gridDetector import Detector
-from config import *
-from color import *
-import sys, os
+import os
 import pickle
+import random
+import sys
+
+import pygame
+
+from color import *
+from config import *
+from gridDetector import Detector
+
 game_folder = os.path.dirname(os.path.abspath(__file__))
 import time
 
