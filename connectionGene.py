@@ -1,9 +1,6 @@
-from nodeGene import NodeGene
-import copy
 import random as rand
+
 import config
-
-
 
 class ConnectionGene(object):
     
