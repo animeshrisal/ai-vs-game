@@ -133,14 +133,7 @@ class Game(object):
         self.clock = pygame.time.Clock()
         self.myfont = pygame.font.SysFont("monospace", 15)
         self.fitness = 0
-
-        def desc(surf, text, x, y):
-            font = pygame.font.Font('arial', size)
-            text_surface = font.render(text, True, white)
-            text_rect = text_surface.get_rect()
-            text_rect.midtop = (x,y)
-            surf.blit(text_surface, text_rect)
-
+        
         self.neural_networks = neural_networks
         self.generation_number = generation_number
         self.species_number = species_number

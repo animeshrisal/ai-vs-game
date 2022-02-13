@@ -3,7 +3,6 @@ import config
 def calculate(genome, X):
     for i, input_value in enumerate(X):
         genome.input_neurons[i].addInput(input_value)
-        
 
     output = [False, False]
     complete = False
